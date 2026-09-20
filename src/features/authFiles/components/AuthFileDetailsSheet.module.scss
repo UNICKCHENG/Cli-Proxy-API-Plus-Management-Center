@@ -13,16 +13,16 @@
   padding: 24px 0;
   justify-content: center;
   font-size: 13px;
-  color: var(--text-secondary);
+  color: var(--text-tertiary);
 }
 
 .error {
   font-size: 12.5px;
   line-height: 1.5;
-  color: var(--danger-color);
-  background: var(--bg-error-light);
-  border: 1px solid var(--warning-border);
-  border-radius: 8px;
+  color: var(--error-color);
+  background: color-mix(in srgb, var(--error-color) 10%, transparent);
+  border: 1px solid color-mix(in srgb, var(--error-color) 28%, transparent);
+  border-radius: var(--radius-sm);
   padding: 8px 10px;
   overflow-wrap: anywhere;
 }
@@ -36,10 +36,10 @@
 .label {
   font-family: $font-mono;
   font-size: 10.5px;
-  font-weight: 700;
+  font-weight: 620;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: var(--text-tertiary);
+  color: var(--text-quaternary);
 }
 
 .textarea {
@@ -50,9 +50,9 @@
   font-size: 12px;
   line-height: 1.55;
   color: var(--text-secondary);
-  background: var(--bg-secondary);
+  background: var(--material-field);
   border: 1px solid var(--border-color);
-  border-radius: 10px;
+  border-radius: var(--radius-sm);
   padding: 10px 12px;
 
   &:focus {
@@ -63,7 +63,7 @@
 }
 
 .textareaInvalid {
-  border-color: var(--danger-color) !important;
+  border-color: var(--error-color) !important;
 }
 
 .invalidPreview {
@@ -74,9 +74,9 @@
   font-size: 12px;
   line-height: 1.55;
   color: var(--text-secondary);
-  background: var(--bg-secondary);
-  border: 1px dashed var(--border-hover);
-  border-radius: 10px;
+  background: var(--bg-tertiary);
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius-sm);
   padding: 10px 12px;
   white-space: pre-wrap;
   overflow-wrap: anywhere;
@@ -90,7 +90,7 @@
 
 .settingsLink {
   color: var(--primary-color);
-  font-weight: 600;
+  font-weight: 560;
   text-decoration: none;
 
   &:hover {

@@ -84,8 +84,8 @@
 
 .item {
   background: var(--bg-primary);
-  border: 1px solid var(--border-color);
-  border-radius: 8px;
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius-sm);
   padding: 10px 14px;
   font-size: 13px;
   color: var(--text-primary);
@@ -95,13 +95,16 @@
   width: 100%;
   max-width: 280px;
   position: relative;
-  transition: all 0.2s ease;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  transition:
+    transform var(--dur-hover) var(--ease-out-strong),
+    border-color $transition-fast,
+    box-shadow $transition-fast;
+  box-shadow: $shadow-sm;
 
   &:hover {
-    border-color: var(--primary-color);
+    border-color: var(--border-hover);
     transform: translateY(-1px);
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    box-shadow: $shadow-md;
     z-index: 10;
   }
 
@@ -148,11 +151,11 @@
     cursor: pointer;
     color: var(--text-secondary);
     transition:
-      background-color 0.15s,
-      color 0.15s;
+      background-color $transition-fast,
+      color $transition-fast;
 
     &:hover {
-      background: var(--border-color);
+      background: color-mix(in srgb, var(--text-primary) 8%, transparent);
       color: var(--text-primary);
     }
   }
@@ -235,19 +238,22 @@
 
 .itemCount {
   font-size: 11px;
-  color: var(--text-tertiary);
+  color: var(--text-quaternary);
   margin-left: 8px;
-  background: var(--bg-secondary);
+  background: var(--bg-tertiary);
   padding: 1px 6px;
-  border-radius: 10px;
+  border-radius: $radius-full;
+  font-variant-numeric: tabular-nums;
 }
 
 .contextMenu {
   position: fixed;
-  background: var(--bg-primary);
-  border: 1px solid var(--border-color);
-  border-radius: 6px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  background: var(--material-glass-strong);
+  backdrop-filter: var(--glass-backdrop-filter);
+  -webkit-backdrop-filter: var(--glass-backdrop-filter);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-md);
+  box-shadow: var(--window-shadow);
   z-index: 9999;
   min-width: 120px;
   overflow: hidden;
@@ -279,7 +285,7 @@
   .menuDivider {
     height: 1px;
     margin: 4px 0;
-    background: var(--border-color);
+    background: var(--hairline);
     padding: 0;
     cursor: default;
     pointer-events: none;
@@ -287,27 +293,27 @@
 }
 
 .settingsEmpty {
-  color: var(--text-tertiary);
-  font-size: 13px;
+  color: var(--text-quaternary);
+  font-size: 12.5px;
   text-align: center;
-  padding: $spacing-lg 0;
+  padding: 20px 0;
 }
 
 .settingsList {
   display: flex;
   flex-direction: column;
-  gap: $spacing-sm;
+  gap: 10px;
 }
 
 .settingsRow {
   display: grid;
   grid-template-columns: minmax(200px, 1fr) auto;
-  gap: $spacing-md;
+  gap: 12px;
   align-items: center;
-  padding: $spacing-sm $spacing-md;
-  border: 1px solid var(--border-color);
-  border-radius: $radius-md;
-  background: var(--bg-secondary);
+  padding: 10px 12px;
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius-md);
+  background: var(--bg-tertiary);
 
   @media (max-width: 768px) {
     grid-template-columns: 1fr;

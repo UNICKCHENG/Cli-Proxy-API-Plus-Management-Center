@@ -5,13 +5,14 @@
 .card {
   display: flex;
   flex-direction: column;
-  gap: clamp(16px, 2vw, 22px);
+  gap: clamp(14px, 1.8vw, 20px);
   min-width: 0;
   box-sizing: border-box;
-  padding: clamp(20px, 2.4vw, 28px);
-  border: 1px solid var(--border-color);
-  border-radius: 14px;
-  background: color-mix(in srgb, var(--bg-primary) 82%, transparent);
+  padding: clamp(18px, 2.2vw, 24px);
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius-lg);
+  background: var(--bg-primary);
+  box-shadow: $shadow-sm;
 
   @include mobile {
     gap: 14px;
@@ -22,7 +23,7 @@
 /* 首载入场：0.45s 强减速上浮（与全站卡片入场同拍），排在头部级联
    （标题 0 / meta 70 / 动作 140 / 工具栏 210 / tabs 280ms）之后收尾，仅首载播一次 */
 .cardEnter {
-  animation: config-card-in 0.45s var(--ease-out-strong, ease-out) 0.32s backwards;
+  animation: config-card-in 0.4s var(--ease-out-strong) 0.24s backwards;
 }
 
 @keyframes config-card-in {
@@ -37,8 +38,8 @@
   grid-template-columns: auto minmax(0, 1fr);
   gap: 10px;
   align-items: start;
-  padding-bottom: 14px;
-  border-bottom: 1px solid var(--border-color);
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--hairline);
 
   @include mobile {
     grid-template-columns: minmax(0, 1fr);
@@ -58,25 +59,26 @@
   align-items: center;
   justify-content: center;
   min-width: 32px;
-  height: 28px;
+  height: 26px;
   padding: 0 8px;
-  border: 1px solid var(--border-color);
-  border-radius: 8px;
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius-xs);
+  background: var(--bg-tertiary);
   color: var(--text-secondary);
   font-family: $font-mono;
-  font-size: 11px;
-  font-weight: 650;
+  font-size: 10.5px;
+  font-weight: 640;
   font-variant-numeric: tabular-nums;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.07em;
 }
 
 .iconBadge {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 28px;
-  height: 28px;
-  border-radius: 8px;
+  width: 26px;
+  height: 26px;
+  border-radius: var(--radius-xs);
   color: var(--text-secondary);
   flex: 0 0 auto;
 }
@@ -84,25 +86,25 @@
 .heading {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 3px;
   min-width: 0;
 }
 
 .title {
   margin: 0;
   color: var(--text-primary);
-  font-size: clamp(18px, 1.6vw, 22px);
-  font-weight: 680;
-  line-height: 1.18;
-  letter-spacing: -0.01em;
+  font-size: clamp(15px, 1.3vw, 17px);
+  font-weight: 660;
+  line-height: 1.2;
+  letter-spacing: -0.014em;
 }
 
 .description {
   margin: 0;
   max-width: 72ch;
   color: var(--text-secondary);
-  font-size: 13px;
-  line-height: 1.65;
+  font-size: 12.5px;
+  line-height: 1.6;
 
   @include mobile {
     max-width: none;

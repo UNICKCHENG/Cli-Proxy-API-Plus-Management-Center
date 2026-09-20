@@ -9,6 +9,7 @@ import {
   useRef,
   useState,
   type MouseEvent as ReactMouseEvent,
+  type CSSProperties,
   type SyntheticEvent,
 } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
@@ -22,10 +23,10 @@ import {
   IconSidebarConfig,
   IconSidebarDashboard,
   IconSidebarLogs,
+  IconSidebarModelPrices,
   IconSidebarOauth,
   IconSidebarPlugins,
   IconSidebarProviders,
-  IconSidebarQuickStart,
   IconSidebarQuota,
   IconSidebarStore,
   IconSidebarSystem,
@@ -46,16 +47,15 @@ import {
   resolvePluginAssetURL,
   type PluginResourceEntry,
 } from '@/features/plugins/pluginResources';
-import { APIKEY_FUN_DISPLAY_NAME, hasApiKeyFunConfig } from '@/features/providers/sponsor';
 import { triggerHeaderRefresh } from '@/hooks/useHeaderRefresh';
 import { LANGUAGE_LABEL_KEYS, LANGUAGE_ORDER } from '@/utils/constants';
 import { isSupportedLanguage } from '@/utils/language';
+import { createRafCoalescedCallback } from '@/utils/raf';
 import { getSidebarShortcutLabel, isSidebarToggleShortcut } from '@/utils/sidebarShortcut';
 import type { Theme } from '@/types';
 
 const sidebarIcons: Record<string, ReactNode> = {
   dashboard: <IconSidebarDashboard size={18} />,
-  quickStart: <IconSidebarQuickStart size={18} />,
   aiProviders: <IconSidebarProviders size={18} />,
   authFiles: <IconSidebarAuthFiles size={18} />,
   oauth: <IconSidebarOauth size={18} />,
@@ -64,6 +64,7 @@ const sidebarIcons: Record<string, ReactNode> = {
   pluginStore: <IconSidebarStore size={18} />,
   config: <IconSidebarConfig size={18} />,
   logs: <IconSidebarLogs size={18} />,
+  modelPrices: <IconSidebarModelPrices size={18} />,
   system: <IconSidebarSystem size={18} />,
 };
 
@@ -259,17 +260,25 @@ const THEME_CARDS: Array<{
   key: Theme;
   labelKey: string;
   colors: { bg: string; card: string; border: string; text: string; textMuted: string };
+  /**
+   * 仅 auto 卡需要：预览色块是「左上浅 / 右下深」的两色对角分割。
+   * 这里只放右下那一半的颜色，左上那一半走 colors.*。
+   */
+  splitColors?: { bg: string; card: string; textMuted: string };
 }> = [
   {
     key: 'auto',
     labelKey: 'theme.auto',
     colors: {
-      bg: 'linear-gradient(135deg, #ffffff 0 50%, #111111 50% 100%)',
-      card: 'linear-gradient(135deg, #ffffff 0 50%, #1a1a1a 50% 100%)',
+      bg: '#ffffff',
+      card: '#ffffff',
       border: '#bdbdbd',
       text: '#2d2a26',
-      textMuted: 'linear-gradient(135deg, #c9c9c9 0 50%, #5a5a5a 50% 100%)',
+      textMuted: '#c9c9c9',
     },
+    // 原来是 linear-gradient(135deg, 浅 0 50%, 深 50% 100%) 的硬停渐变；
+    // 现在由 .theme-card-*::after 用 clip-path 铺右下三角，两色之间没有插值，观感一致。
+    splitColors: { bg: '#111111', card: '#1a1a1a', textMuted: '#5a5a5a' },
   },
   {
     key: 'white',
@@ -306,6 +315,11 @@ const THEME_CARDS: Array<{
   },
 ];
 
+/** 两色对角分割的右下那一半：通过 CSS 变量交给 .theme-card-*::after 绘制。 */
+function splitStyle(color?: string): CSSProperties {
+  return color ? ({ '--theme-split': color } as CSSProperties) : {};
+}
+
 export function MainLayout() {
   const { t } = useTranslation();
   const { showNotification } = useNotificationStore();
@@ -318,7 +332,6 @@ export function MainLayout() {
 
   const fetchConfig = useConfigStore((state) => state.fetchConfig);
   const clearCache = useConfigStore((state) => state.clearCache);
-  const config = useConfigStore((state) => state.config);
 
   const theme = useThemeStore((state) => state.theme);
   const setTheme = useThemeStore((state) => state.setTheme);
@@ -374,13 +387,17 @@ export function MainLayout() {
       resizeObserver.observe(headerRef.current);
     }
 
-    window.addEventListener('resize', updateHeaderHeight);
+    // 窗口 resize 会以每秒上百次的频率触发，而这里每次都要读 offsetHeight（强制布局）。
+    // 合并到每帧一次，最终结果不变。
+    const coalesced = createRafCoalescedCallback(updateHeaderHeight);
+    window.addEventListener('resize', coalesced.schedule);
 
     return () => {
       if (resizeObserver) {
         resizeObserver.disconnect();
       }
-      window.removeEventListener('resize', updateHeaderHeight);
+      window.removeEventListener('resize', coalesced.schedule);
+      coalesced.cancel();
     };
   }, []);
 
@@ -408,8 +425,13 @@ export function MainLayout() {
     };
 
     updateRailTooltipPosition();
-    window.addEventListener('resize', updateRailTooltipPosition);
-    return () => window.removeEventListener('resize', updateRailTooltipPosition);
+    // 定位需要读 offsetHeight，resize 期间按帧合并（见 updateHeaderHeight 的说明）。
+    const coalesced = createRafCoalescedCallback(updateRailTooltipPosition);
+    window.addEventListener('resize', coalesced.schedule);
+    return () => {
+      window.removeEventListener('resize', coalesced.schedule);
+      coalesced.cancel();
+    };
   }, [railTooltip]);
 
   // Keep the content center available to bottom overlays that align with the main area.
@@ -433,13 +455,16 @@ export function MainLayout() {
       resizeObserver.observe(contentRef.current);
     }
 
-    window.addEventListener('resize', updateContentCenter);
+    // getBoundingClientRect 会强制同步布局，同样按帧合并 resize 响应。
+    const coalesced = createRafCoalescedCallback(updateContentCenter);
+    window.addEventListener('resize', coalesced.schedule);
 
     return () => {
       if (resizeObserver) {
         resizeObserver.disconnect();
       }
-      window.removeEventListener('resize', updateContentCenter);
+      window.removeEventListener('resize', coalesced.schedule);
+      coalesced.cancel();
       document.documentElement.style.removeProperty('--content-center-x');
     };
   }, []);
@@ -583,15 +608,6 @@ export function MainLayout() {
       })
     : [];
 
-  const isApiKeyFunConfigured = hasApiKeyFunConfig(config);
-  const quickStartNavItem: SidebarNavLinkItem = {
-    path: '/quick-start',
-    label: isApiKeyFunConfigured ? APIKEY_FUN_DISPLAY_NAME : undefined,
-    labelKey: isApiKeyFunConfigured ? undefined : 'nav.quick_start',
-    metaKey: 'nav_meta.quick_start',
-    icon: sidebarIcons.quickStart,
-  };
-
   const navGroups: SidebarNavGroup[] = [
     {
       id: 'operate',
@@ -603,7 +619,6 @@ export function MainLayout() {
           metaKey: 'nav_meta.dashboard',
           icon: sidebarIcons.dashboard,
         },
-        ...(!isApiKeyFunConfigured ? [quickStartNavItem] : []),
       ],
     },
     {
@@ -633,7 +648,6 @@ export function MainLayout() {
           metaKey: 'nav_meta.oauth',
           icon: sidebarIcons.oauth,
         },
-        ...(isApiKeyFunConfigured ? [quickStartNavItem] : []),
       ],
     },
     {
@@ -645,6 +659,12 @@ export function MainLayout() {
           labelKey: 'nav.quota_management',
           metaKey: 'nav_meta.quota_management',
           icon: sidebarIcons.quota,
+        },
+        {
+          path: '/model-prices',
+          labelKey: 'nav.model_prices',
+          metaKey: 'nav_meta.model_prices',
+          icon: sidebarIcons.modelPrices,
         },
         {
           path: '/logs',
@@ -700,6 +720,35 @@ export function MainLayout() {
   ];
   const navItems = navGroups.flatMap((group) => flattenNavItems(group.items));
   const navOrder = navItems.map((item) => item.path);
+
+  // 工具条标题：按最长前缀匹配当前路由（子页面回退到父级菜单项）
+  const activeNavItem = (() => {
+    const trimmed =
+      location.pathname.length > 1 && location.pathname.endsWith('/')
+        ? location.pathname.slice(0, -1)
+        : location.pathname;
+    const normalizedPath = trimmed === '/dashboard' ? '/' : trimmed;
+    let match: SidebarNavLinkItem | undefined;
+
+    for (const item of navItems) {
+      if (item.path === normalizedPath) return item;
+      if (item.path !== '/' && normalizedPath.startsWith(`${item.path}/`)) {
+        if (!match || item.path.length > match.path.length) match = item;
+      }
+    }
+
+    return match;
+  })();
+  const pageTitle = activeNavItem
+    ? activeNavItem.labelKey
+      ? t(activeNavItem.labelKey)
+      : activeNavItem.label || ''
+    : '';
+  const pageSubtitle = activeNavItem
+    ? activeNavItem.metaKey
+      ? t(activeNavItem.metaKey)
+      : activeNavItem.meta || ''
+    : '';
   const getRouteOrder = (pathname: string) => {
     const trimmedPath =
       pathname.length > 1 && pathname.endsWith('/') ? pathname.slice(0, -1) : pathname;
@@ -815,6 +864,8 @@ export function MainLayout() {
 
   const isMac = useMemo(() => {
     if (typeof navigator === 'undefined') return false;
+    // SAFETY: userAgentData 不在标准 Navigator 类型里，浏览器不支持时该字段为 undefined，
+    // 因此只读访问（不写入）并配合可选链是安全的。
     const platform =
       (navigator as unknown as { userAgentData?: { platform?: string } }).userAgentData?.platform ||
       navigator.platform ||
@@ -976,46 +1027,58 @@ export function MainLayout() {
         isPluginResourcePage ? 'plugin-resource-shell' : ''
       }`}
     >
-      <div className="top-gradient-blur" aria-hidden="true" />
-
       <header className="main-header" ref={headerRef}>
-        <button
-          type="button"
-          className="sidebar-toggle-floating"
-          onClick={() => {
-            hideRailTooltip();
-            setSidebarCollapsed((prev) => !prev);
-          }}
-          onMouseEnter={(event) =>
-            handleRailTooltipMouseEnter(event, 'sidebar-toggle', sidebarToggleLabel, shortcutText)
-          }
-          onMouseLeave={handleRailTooltipMouseLeave}
-          onFocus={(event) =>
-            handleRailTooltipFocus(event, 'sidebar-toggle', sidebarToggleLabel, shortcutText)
-          }
-          onBlur={(event) =>
-            handleRailTooltipBlur(event, 'sidebar-toggle', sidebarToggleLabel, shortcutText)
-          }
-          aria-label={`${sidebarToggleLabel} (${shortcutText})`}
-          aria-describedby={railTooltip?.targetID === 'sidebar-toggle' ? NAV_TOOLTIP_ID : undefined}
-        >
-          {sidebarCollapsed ? headerIcons.chevronRight : headerIcons.chevronLeft}
-        </button>
-
-        <div className="mobile-sidebar-actions">
-          <Button
-            className="mobile-menu-btn"
-            variant="ghost"
-            size="sm"
-            onClick={() => setSidebarOpen((prev) => !prev)}
-            title={mobileSidebarToggleLabel}
-            aria-label={mobileSidebarToggleLabel}
+        <div className="toolbar-leading">
+          <button
+            type="button"
+            className="sidebar-toggle"
+            onClick={() => {
+              hideRailTooltip();
+              setSidebarCollapsed((prev) => !prev);
+            }}
+            onMouseEnter={(event) =>
+              handleRailTooltipMouseEnter(
+                event,
+                'sidebar-toggle',
+                sidebarToggleLabel,
+                shortcutText
+              )
+            }
+            onMouseLeave={handleRailTooltipMouseLeave}
+            onFocus={(event) =>
+              handleRailTooltipFocus(event, 'sidebar-toggle', sidebarToggleLabel, shortcutText)
+            }
+            onBlur={(event) =>
+              handleRailTooltipBlur(event, 'sidebar-toggle', sidebarToggleLabel, shortcutText)
+            }
+            aria-label={`${sidebarToggleLabel} (${shortcutText})`}
+            aria-describedby={
+              railTooltip?.targetID === 'sidebar-toggle' ? NAV_TOOLTIP_ID : undefined
+            }
           >
-            {sidebarOpen ? headerIcons.close : headerIcons.menu}
-          </Button>
+            {sidebarCollapsed ? headerIcons.chevronRight : headerIcons.chevronLeft}
+          </button>
+
+          <div className="mobile-sidebar-actions">
+            <Button
+              className="mobile-menu-btn"
+              variant="ghost"
+              size="sm"
+              onClick={() => setSidebarOpen((prev) => !prev)}
+              title={mobileSidebarToggleLabel}
+              aria-label={mobileSidebarToggleLabel}
+            >
+              {sidebarOpen ? headerIcons.close : headerIcons.menu}
+            </Button>
+          </div>
+
+          <div className="toolbar-title">
+            <span className="toolbar-title-text">{pageTitle}</span>
+            {pageSubtitle ? <span className="toolbar-title-meta">{pageSubtitle}</span> : null}
+          </div>
         </div>
 
-        <div className="header-actions floating-actions">
+        <div className="header-actions">
           <Button
             variant="ghost"
             size="sm"
@@ -1038,7 +1101,7 @@ export function MainLayout() {
             </Button>
             {languageMenuOpen && (
               <div
-                className="notification entering language-menu-popover"
+                className="language-menu-popover"
                 role="menu"
                 aria-label={t('language.switch')}
               >
@@ -1078,7 +1141,7 @@ export function MainLayout() {
             </Button>
             {themeMenuOpen && (
               <div
-                className="notification entering theme-menu-popover"
+                className="theme-menu-popover"
                 role="menu"
                 aria-label={t('theme.switch')}
               >
@@ -1096,6 +1159,7 @@ export function MainLayout() {
                       style={{
                         background: tc.colors.bg,
                         border: `1px solid ${tc.colors.border}`,
+                        ...splitStyle(tc.splitColors?.bg),
                       }}
                     >
                       <div
@@ -1103,6 +1167,7 @@ export function MainLayout() {
                         style={{
                           background: tc.colors.card,
                           borderBottom: `1px solid ${tc.colors.border}`,
+                          ...splitStyle(tc.splitColors?.card),
                         }}
                       />
                       <div className="theme-card-body">
@@ -1111,16 +1176,29 @@ export function MainLayout() {
                           style={{
                             background: tc.colors.card,
                             borderRight: `1px solid ${tc.colors.border}`,
+                            ...splitStyle(tc.splitColors?.card),
                           }}
                         />
-                        <div className="theme-card-content" style={{ background: tc.colors.bg }}>
+                        <div
+                          className="theme-card-content"
+                          style={{
+                            background: tc.colors.bg,
+                            ...splitStyle(tc.splitColors?.bg),
+                          }}
+                        >
                           <div
                             className="theme-card-line"
-                            style={{ background: tc.colors.textMuted }}
+                            style={{
+                              background: tc.colors.textMuted,
+                              ...splitStyle(tc.splitColors?.textMuted),
+                            }}
                           />
                           <div
                             className="theme-card-line short"
-                            style={{ background: tc.colors.textMuted }}
+                            style={{
+                              background: tc.colors.textMuted,
+                              ...splitStyle(tc.splitColors?.textMuted),
+                            }}
                           />
                         </div>
                       </div>

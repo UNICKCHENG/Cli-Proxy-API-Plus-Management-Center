@@ -27,28 +27,28 @@
 
 .detail {
   flex-shrink: 0;
-  color: var(--text-tertiary);
+  color: var(--text-quaternary);
   font-size: 10px;
 }
 
 /* 显式勾选：实线 + primary 染色，读起来是「我选的」。 */
 .exact {
-  border: 1px solid color-mix(in srgb, var(--primary-color) 45%, var(--border-color));
-  background: color-mix(in srgb, var(--primary-color) 8%, var(--bg-primary));
+  border: 1px solid color-mix(in srgb, var(--primary-color) 45%, transparent);
+  background: color-mix(in srgb, var(--primary-color) 10%, var(--bg-primary));
 }
 
 /* 规则派生：虚线 = 「不是逐个挑的，是某条规则算出来的」。 */
 .wildcard {
-  border: 1px dashed color-mix(in srgb, var(--primary-color) 38%, var(--border-color));
-  background: transparent;
+  border: 1px solid color-mix(in srgb, var(--primary-color) 32%, transparent);
+  background: color-mix(in srgb, var(--primary-color) 6%, transparent);
   color: var(--text-secondary);
 }
 
-/* 目录外的精确规则：同样虚线，但更弱——它指向一个我们无法确认存在的模型。 */
+/* 目录外的精确规则：同样更弱——它指向一个我们无法确认存在的模型。 */
 .unknown {
-  border: 1px dashed var(--border-color);
-  background: transparent;
-  color: var(--text-tertiary);
+  border: 1px solid var(--hairline);
+  background: var(--bg-tertiary);
+  color: var(--text-quaternary);
 }
 
 .remove {
@@ -60,14 +60,14 @@
   height: 20px;
   padding: 0;
   border: 0;
-  border-radius: 50%;
+  border-radius: $radius-full;
   background: transparent;
-  color: var(--text-tertiary);
+  color: var(--text-quaternary);
   cursor: pointer;
   transition:
-    background-color var(--dur-hover, 200ms) var(--ease-out-strong, ease-out),
-    color var(--dur-hover, 200ms) var(--ease-out-strong, ease-out),
-    transform var(--dur-press, 160ms) var(--ease-out-strong, ease-out);
+    background-color $transition-fast,
+    color $transition-fast,
+    transform var(--dur-press) var(--ease-out-strong);
 
   &:active:not(:disabled) {
     transform: scale(0.9);
@@ -85,7 +85,7 @@
 
   @media (hover: hover) and (pointer: fine) {
     &:hover:not(:disabled) {
-      background: var(--bg-tertiary);
+      background: color-mix(in srgb, var(--text-primary) 8%, transparent);
       color: var(--text-primary);
     }
   }

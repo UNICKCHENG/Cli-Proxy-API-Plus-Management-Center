@@ -14,32 +14,31 @@
 }
 
 .pageTitle {
-  font-size: 28px;
-  font-weight: 700;
-  color: var(--text-primary);
-  margin: 0 0 $spacing-lg 0;
+  @include page-title(21px);
+
+  margin: 0 0 12px;
 }
 
 .tabBar {
   display: flex;
-  gap: $spacing-xs;
-  margin-bottom: $spacing-lg;
-  border-bottom: 1px solid var(--border-color);
+  gap: $spacing-2xs;
+  margin-bottom: 14px;
+  border-bottom: 1px solid var(--hairline);
 }
 
 .tabItem {
   @include button-reset;
-  padding: 12px 20px;
-  font-size: 14px;
-  font-weight: 500;
+  padding: 7px 10px 10px;
+  font-size: 12.5px;
+  font-weight: 540;
   color: var(--text-secondary);
   background: transparent;
   border-bottom: 2px solid transparent;
   margin-bottom: -1px;
   cursor: pointer;
   transition:
-    color 0.15s ease,
-    border-color 0.15s ease;
+    color $transition-fast,
+    border-color $transition-fast;
 
   &:hover {
     color: var(--text-primary);
@@ -53,14 +52,15 @@
 }
 
 .tabActive {
-  color: var(--primary-color);
+  color: var(--primary-active);
+  font-weight: 620;
   border-bottom-color: var(--primary-color);
 }
 
 .content {
   display: flex;
   flex-direction: column;
-  gap: $spacing-lg;
+  gap: 14px;
   flex: 1;
   min-height: 0;
 
@@ -116,9 +116,9 @@
 }
 
 .searchWrapper {
-  flex: 1;
-  min-width: 220px;
-  max-width: 420px;
+  flex: 0 1 240px;
+  min-width: 170px;
+  max-width: 280px;
 }
 
 .filterPanelHeader {
@@ -154,9 +154,9 @@
   gap: 8px;
   flex: 1 1 100%;
   padding: 8px 10px;
-  background: var(--bg-secondary);
-  border: 1px solid var(--border-color);
-  border-radius: $radius-md;
+  background: var(--bg-tertiary);
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius-md);
 }
 
 .filterChipGroup {
@@ -168,8 +168,8 @@
 
 .filterChipLabel {
   font-size: 12px;
-  color: var(--text-secondary);
-  font-weight: 700;
+  color: var(--text-tertiary);
+  font-weight: 560;
   line-height: 28px;
   min-width: 68px;
 }
@@ -187,38 +187,38 @@
   display: inline-flex;
   align-items: center;
   gap: 4px;
-  padding: 4px 10px;
+  padding: 3px 9px;
   border-radius: $radius-full;
-  border: 1px solid var(--border-color);
-  background: var(--bg-primary);
+  border: 1px solid var(--hairline);
+  background: var(--bg-tertiary);
   color: var(--text-secondary);
-  font-size: 12px;
-  line-height: 1.3;
+  font-size: 11.5px;
+  line-height: 1.35;
   cursor: pointer;
   max-width: 280px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
   transition:
-    border-color 0.15s ease,
-    color 0.15s ease,
-    background-color 0.15s ease;
+    border-color $transition-fast,
+    color $transition-fast,
+    background-color $transition-fast;
 
   &:hover:not(:disabled) {
     color: var(--text-primary);
-    border-color: var(--primary-color);
+    border-color: var(--border-hover);
   }
 
   &:disabled {
-    opacity: 0.55;
+    opacity: 0.45;
     cursor: not-allowed;
   }
 }
 
 .filterChipActive {
-  color: var(--primary-color);
-  border-color: rgba($primary-color, 0.45);
-  background: rgba($primary-color, 0.14);
+  color: var(--primary-active);
+  border-color: color-mix(in srgb, var(--primary-color) 45%, transparent);
+  background: color-mix(in srgb, var(--primary-color) 14%, transparent);
 }
 
 .filterChipHint {
@@ -266,13 +266,14 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 28px;
-  height: 28px;
+  width: 24px;
+  height: 24px;
   border-radius: $radius-full;
-  color: var(--text-secondary);
+  color: var(--text-tertiary);
 
   &:hover {
-    background: var(--bg-secondary);
+    background: color-mix(in srgb, var(--text-primary) 8%, transparent);
+    color: var(--text-primary);
   }
 }
 
@@ -315,9 +316,9 @@
 }
 
 .logPanel {
-  background: var(--bg-secondary);
-  border: 1px solid var(--border-color);
-  border-radius: $radius-md;
+  background: var(--bg-primary);
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius-lg);
   flex: 1 1 auto;
   min-height: 280px;
   max-height: calc(100vh - 320px);
@@ -380,18 +381,16 @@
 
 .errorLogContent {
   margin: 0;
-  padding: 12px;
+  padding: 12px 14px;
   max-height: min(58vh, 640px);
   overflow: auto;
-  border: 1px solid var(--border-color);
-  border-radius: $radius-md;
-  background: var(--bg-secondary);
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius-md);
+  background: var(--bg-tertiary);
   color: var(--text-primary);
-  font-family:
-    ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New',
-    monospace;
+  font-family: $font-mono;
   font-size: 12px;
-  line-height: 1.5;
+  line-height: 1.6;
   white-space: pre;
   -webkit-overflow-scrolling: touch;
 }
@@ -405,7 +404,7 @@
   justify-content: space-between;
   gap: $spacing-sm;
   padding: 8px 12px;
-  border-bottom: 1px solid var(--border-color);
+  border-bottom: 1px solid var(--hairline);
   background: var(--bg-primary);
   color: var(--text-secondary);
   font-size: 12px;
@@ -455,11 +454,9 @@
   user-select: text;
   white-space: pre;
   color: var(--text-primary);
-  font-family:
-    ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New',
-    monospace;
-  font-size: 12.5px;
-  line-height: 1.45;
+  font-family: $font-mono;
+  font-size: 12px;
+  line-height: 1.55;
 
   @include tablet {
     padding: 8px 10px;
@@ -476,19 +473,21 @@
   display: grid;
   grid-template-columns: 170px 1fr;
   gap: $spacing-md;
-  padding: 10px 12px;
-  border-bottom: 1px solid var(--border-color);
+  padding: 9px 12px;
+  border-bottom: 1px solid var(--hairline);
   border-left: 3px solid transparent;
   cursor: copy;
-  font-family:
-    ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New',
-    monospace;
-  font-size: 12.5px;
-  line-height: 1.45;
+  font-family: $font-mono;
+  font-size: 12px;
+  line-height: 1.5;
   color: var(--text-primary);
 
+  &:last-child {
+    border-bottom: 0;
+  }
+
   &:hover {
-    background: rgba($primary-color, 0.06);
+    background: color-mix(in srgb, var(--primary-color) 6%, transparent);
   }
 
   @include tablet {
@@ -537,11 +536,11 @@
   align-items: center;
   padding: 2px 8px;
   border-radius: $radius-full;
-  font-size: 12px;
-  font-weight: 800;
-  border: 1px solid var(--border-color);
-  background: var(--bg-primary);
-  color: var(--text-secondary);
+  font-size: 11.5px;
+  font-weight: 620;
+  border: 1px solid var(--hairline);
+  background: var(--bg-tertiary);
+  color: var(--text-tertiary);
   white-space: nowrap;
 }
 
@@ -550,11 +549,11 @@
   align-items: center;
   padding: 2px 8px;
   border-radius: $radius-full;
-  font-size: 12px;
-  font-weight: 600;
-  border: 1px solid var(--border-color);
-  background: var(--bg-primary);
-  color: var(--text-secondary);
+  font-size: 11.5px;
+  font-weight: 560;
+  border: 1px solid var(--hairline);
+  background: var(--bg-tertiary);
+  color: var(--text-tertiary);
   white-space: nowrap;
 }
 
@@ -569,13 +568,10 @@
 }
 
 .requestIdBadge {
-  font-family:
-    ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New',
-    monospace;
-  font-size: 11px;
-  color: #0891b2;
-  background: rgba(8, 145, 178, 0.1);
-  border-color: rgba(8, 145, 178, 0.25);
+  font-family: $font-mono;
+  font-size: 10.5px;
+  color: var(--text-secondary);
+  background: color-mix(in srgb, var(--text-primary) 7%, transparent);
 }
 
 .statusBadge {
@@ -626,9 +622,9 @@
 
 .levelDebug,
 .levelTrace {
-  color: var(--text-secondary);
-  background: rgba(107, 114, 128, 0.12);
-  border-color: rgba(107, 114, 128, 0.25);
+  color: var(--text-tertiary);
+  background: color-mix(in srgb, var(--text-primary) 7%, transparent);
+  border-color: var(--hairline);
 }
 
 .methodBadge {
@@ -639,7 +635,7 @@
 
 .path {
   color: var(--text-primary);
-  font-weight: 700;
+  font-weight: 620;
   max-width: 520px;
   @include text-ellipsis;
 
@@ -778,7 +774,7 @@
   min-height: 0;
   width: 100vw;
   height: 100vh;
-  padding: $spacing-lg;
+  padding: 20px;
   border-radius: 0;
   border: none;
   overflow: hidden;

@@ -22,7 +22,7 @@
   height: 100%;
   /* 基线 + 两端渐隐：与 LiveWire 的水平 mask 同语汇 */
   padding-bottom: 3px;
-  border-bottom: 1px solid color-mix(in srgb, var(--border-color) 85%, transparent);
+  border-bottom: 1px solid var(--hairline);
   mask-image: linear-gradient(to right, transparent, #000 2%, #000 98%, transparent);
 }
 
@@ -32,7 +32,7 @@
   max-width: 14px;
   border-radius: 2px 2px 1px 1px;
   transform-origin: bottom;
-  animation: pulse-bar-in 0.45s var(--ease-out-strong, ease-out) both;
+  animation: pulse-bar-in 0.45s var(--ease-out-strong) both;
   animation-delay: calc(0.35s + var(--bar-delay, 0s));
 }
 
@@ -72,9 +72,9 @@
   flex-shrink: 0;
   font-family: $font-mono;
   font-size: 11px;
-  font-weight: 650;
+  font-weight: 580;
   font-variant-numeric: tabular-nums;
-  color: var(--text-tertiary);
+  color: var(--text-quaternary);
   line-height: 1;
   padding-bottom: 1px;
 }

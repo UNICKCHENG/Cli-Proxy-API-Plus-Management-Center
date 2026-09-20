@@ -1,3 +1,5 @@
+@use '../../styles/mixins' as *;
+
 .root {
   display: flex;
   flex-direction: column;
@@ -16,18 +18,18 @@
   justify-content: space-between;
   gap: $spacing-sm;
   width: 100%;
-  min-height: 40px;
+  min-height: var(--control-h-md);
   padding: 0 12px;
   overflow: hidden;
   border: 1px solid var(--border-color);
   border-radius: $radius-md;
-  background: var(--bg-primary);
+  background: var(--material-field);
   color: var(--text-primary);
   font-size: 13px;
   text-align: left;
   cursor: pointer;
   transition:
-    border-color var(--dur-hover, 200ms) var(--ease-out-strong, ease-out),
+    border-color $transition-fast,
     background-color var(--dur-hover, 200ms) var(--ease-out-strong, ease-out),
     transform var(--dur-press, 160ms) var(--ease-out-strong, ease-out);
 
@@ -125,11 +127,14 @@
   flex-direction: column;
   margin-top: 6px;
   overflow: hidden;
-  border: 1px solid var(--border-color);
-  border-radius: $radius-md;
-  background: var(--bg-secondary);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-lg);
+  background: var(--material-glass-strong);
+  backdrop-filter: var(--glass-backdrop-filter);
+  -webkit-backdrop-filter: var(--glass-backdrop-filter);
+  box-shadow: var(--window-shadow);
   transform-origin: top;
-  animation: excluded-panel-in var(--dur-hover, 200ms) var(--ease-out-strong, ease-out) both;
+  animation: excluded-panel-in $transition-fast both;
 }
 
 /* 只写 from，让元素的静止样式定义终点（与 toolbar-popover-in 同一写法）。 */
@@ -156,13 +161,13 @@
   display: flex;
   align-items: center;
   padding: 8px;
-  border-bottom: 1px solid var(--border-color);
+  border-bottom: 1px solid var(--hairline);
 }
 
 .searchIcon {
   position: absolute;
   left: 18px;
-  color: var(--text-tertiary);
+  color: var(--text-quaternary);
   pointer-events: none;
 }
 
@@ -171,18 +176,18 @@
   padding: 6px 10px 6px 32px;
   border: 1px solid var(--border-color);
   border-radius: $radius-sm;
-  background: var(--bg-primary);
+  background: var(--material-field);
   color: var(--text-primary);
   font-size: 12px;
 
   &::placeholder {
-    color: var(--text-tertiary);
+    color: var(--text-quaternary);
   }
 
   &:focus {
     outline: none;
     border-color: var(--primary-color);
-    box-shadow: 0 0 0 3px rgba($primary-color, 0.18);
+    box-shadow: 0 0 0 3px var(--primary-10);
   }
 }
 
@@ -203,20 +208,19 @@
 .row {
   display: flex;
   align-items: center;
-  gap: $spacing-sm;
+  gap: 10px;
   padding: 7px 8px;
   border-radius: $radius-sm;
   cursor: pointer;
-  transition: background-color var(--dur-press, 160ms) var(--ease-out-strong, ease-out);
+  transition: background-color $transition-fast;
 
   &:focus-visible {
-    outline: 2px solid var(--primary-color);
-    outline-offset: -2px;
+    @include focus-ring(2px);
   }
 }
 
 .rowHighlighted {
-  background: var(--bg-tertiary);
+  background: color-mix(in srgb, var(--text-primary) 6%, transparent);
 }
 
 .rowExcluded .checkbox {
@@ -239,11 +243,11 @@
   width: 16px;
   height: 16px;
   border: 1px solid var(--border-color);
-  border-radius: $radius-sm;
-  background: var(--bg-primary);
+  border-radius: var(--radius-xs);
+  background: var(--material-field);
   transition:
-    background-color var(--dur-press, 160ms) var(--ease-out-strong, ease-out),
-    border-color var(--dur-press, 160ms) var(--ease-out-strong, ease-out);
+    background-color $transition-fast,
+    border-color $transition-fast;
 }
 
 .rowText {
@@ -266,7 +270,7 @@
 .rowDisplayName,
 .rowReason {
   overflow: hidden;
-  color: var(--text-tertiary);
+  color: var(--text-quaternary);
   font-size: 11px;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -274,22 +278,24 @@
 
 .badge {
   flex-shrink: 0;
-  padding: 2px 6px;
-  border: 1px dashed color-mix(in srgb, var(--primary-color) 38%, var(--border-color));
+  padding: 2px 7px;
+  border: 1px solid color-mix(in srgb, var(--primary-color) 34%, transparent);
   border-radius: $radius-full;
-  color: var(--text-secondary);
+  color: var(--text-tertiary);
   font-size: 10px;
+  font-weight: 540;
 }
 
 .badgeMuted {
   border-style: dotted;
-  color: var(--text-tertiary);
+  border-color: var(--hairline);
+  color: var(--text-quaternary);
 }
 
 .noResults {
   margin: 0;
-  padding: $spacing-lg $spacing-sm;
-  color: var(--text-tertiary);
+  padding: 20px 10px;
+  color: var(--text-quaternary);
   font-size: 12px;
   text-align: center;
 }
@@ -302,10 +308,10 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: $spacing-sm;
+  gap: 10px;
   padding: 8px 10px;
-  border-top: 1px solid var(--border-color);
-  background: var(--bg-primary);
+  border-top: 1px solid var(--hairline);
+  background: color-mix(in srgb, var(--text-primary) 3%, transparent);
 }
 
 .footerCount {
@@ -363,20 +369,20 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: $spacing-sm;
+  gap: 10px;
   margin-top: 6px;
   padding: 12px;
-  border: 1px solid var(--border-color);
-  border-radius: $radius-md;
-  background: var(--bg-secondary);
-  color: var(--text-secondary);
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius-sm);
+  background: var(--bg-tertiary);
+  color: var(--text-tertiary);
   font-size: 12px;
 }
 
 .retryButton {
   flex-shrink: 0;
   padding: 4px 10px;
-  border: 1px solid var(--border-color);
+  border: 1px solid var(--hairline);
   border-radius: $radius-sm;
   background: var(--bg-primary);
   color: var(--text-primary);

@@ -2,24 +2,6 @@ import type { GeminiKeyConfig, OpenAIProviderConfig, ProviderKeyConfig } from '@
 import { hasDisableAllModelsRule, stripDisableAllModelsRule } from '@/components/providers/utils';
 import { maskApiKey } from '@/utils/format';
 import {
-  APIKEY_FUN_DISPLAY_NAME,
-  APIKEY_FUN_PROTOCOLS,
-  getApiKeyFunProtocolUrls,
-  resolveApiKeyFunBaseUrl,
-} from './sponsor';
-import {
-  FENNO_AI_DISPLAY_NAME,
-  FENNO_AI_PROTOCOL_LABELS,
-  getFennoAIProtocolUrls,
-  resolveFennoAIBaseUrl,
-} from './fennoAI';
-import {
-  QINIU_CLOUD_DISPLAY_NAME,
-  QINIU_CLOUD_PROTOCOL_LABELS,
-  getQiniuCloudProtocolUrls,
-  resolveQiniuCloudBaseUrl,
-} from './qiniuCloud';
-import {
   KIMI_DISPLAY_NAME,
   KIMI_PROTOCOL_LABELS,
   getKimiProtocolUrls,
@@ -309,33 +291,6 @@ function sponsorRawToResource(
     } as ProviderResourceSelector,
     raw,
   };
-}
-
-export function apiKeyFunToResource(raw: SponsorProviderRaw): ProviderResource | null {
-  return sponsorRawToResource('apikeyFun', raw, {
-    displayName: APIKEY_FUN_DISPLAY_NAME,
-    protocolLabels: APIKEY_FUN_PROTOCOLS,
-    resolveBaseUrl: resolveApiKeyFunBaseUrl,
-    getProtocolUrls: getApiKeyFunProtocolUrls,
-  });
-}
-
-export function fennoAIToResource(raw: SponsorProviderRaw): ProviderResource | null {
-  return sponsorRawToResource('fennoAI', raw, {
-    displayName: FENNO_AI_DISPLAY_NAME,
-    protocolLabels: FENNO_AI_PROTOCOL_LABELS,
-    resolveBaseUrl: resolveFennoAIBaseUrl,
-    getProtocolUrls: getFennoAIProtocolUrls,
-  });
-}
-
-export function qiniuCloudToResource(raw: SponsorProviderRaw): ProviderResource | null {
-  return sponsorRawToResource('qiniuCloud', raw, {
-    displayName: QINIU_CLOUD_DISPLAY_NAME,
-    protocolLabels: QINIU_CLOUD_PROTOCOL_LABELS,
-    resolveBaseUrl: resolveQiniuCloudBaseUrl,
-    getProtocolUrls: getQiniuCloudProtocolUrls,
-  });
 }
 
 export function kimiToResource(raw: SponsorProviderRaw): ProviderResource | null {

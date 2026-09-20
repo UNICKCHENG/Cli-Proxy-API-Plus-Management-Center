@@ -1,7 +1,7 @@
 @use '../../../styles/mixins' as *;
 
 /* ============================================================
- * 凭证卡片 — statTile 配方（14px 圆角 / 1px 边框 / 82% 透感纸面）
+ * 凭证卡片 — 与其他卡片同一配方（--radius-lg / hairline / 升面）
  * 身份优先；启停仅由底部开关表达，停用不降低内容对比度。
  * ============================================================ */
 
@@ -9,23 +9,27 @@
   position: relative;
   display: flex;
   flex-direction: column;
-  gap: 12px;
-  padding: 16px;
-  border-radius: 14px;
-  border: 1px solid var(--border-color);
-  background: color-mix(in srgb, var(--bg-primary) 82%, transparent);
-  transition: border-color 160ms var(--ease-out-strong, ease-out);
+  gap: 10px;
+  padding: 14px;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--hairline);
+  background: var(--bg-primary);
+  box-shadow: $shadow-sm;
+  transition:
+    border-color $transition-fast,
+    box-shadow $transition-fast;
 }
 
 @media (hover: hover) and (pointer: fine) {
   .card:hover {
     border-color: var(--border-hover);
+    box-shadow: $shadow-md;
   }
 }
 
 .cardCompact {
-  gap: 10px;
-  padding: 13px 14px;
+  gap: 8px;
+  padding: 12px;
 }
 
 .cardSelected {
@@ -35,7 +39,7 @@
 
 /* 首次数据到达时的一次性级联入场；过滤/翻页/轮询不重播 */
 .cardEnter {
-  animation: card-in 180ms var(--ease-out-strong, ease-out) both;
+  animation: card-in 180ms var(--ease-out-strong) both;
   animation-delay: var(--card-delay, 0s);
 }
 
@@ -66,27 +70,29 @@
   gap: 4px 8px;
   min-width: 0;
   margin: 0;
-  font-size: 15px;
-  font-weight: 600;
-  line-height: 1.6;
+  font-size: 14px;
+  font-weight: 640;
+  letter-spacing: -0.01em;
+  line-height: 1.5;
 }
 
 /* 品牌药丸与账号按盒子中心对齐，避免不同字号的基线造成视觉偏移。 */
 .providerBadge {
   flex-shrink: 0;
   max-width: 100%;
-  padding: 4px 10px;
-  border-radius: 12px;
-  font-size: 12px;
-  font-weight: 600;
-  line-height: 1.3;
+  padding: 2px 8px;
+  border-radius: var(--radius-full);
+  font-size: 11.5px;
+  font-weight: 580;
+  line-height: 1.35;
   overflow-wrap: anywhere;
 }
 
 .runtimeLabel {
   margin-left: auto;
-  font-size: 11px;
-  color: var(--text-tertiary);
+  font-size: 10.5px;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-quaternary);
 }
 
 /* 窄卡片保留基本阅读宽度；空间不足时换行，不截断邮箱或项目 ID。 */
@@ -108,18 +114,18 @@
 /* 副行：满卡宽的文件名。email 在 codex 名字的中段，必须能换行才不丢信息，
    overflow-wrap + -webkit-box 的组合与本文件 .warning span 同配方。 */
 .fileName {
-  margin: -4px 0 0;
+  margin: -2px 0 0;
   font-family: $font-mono;
-  font-size: 11px;
+  font-size: 10.5px;
   line-height: 1.45;
-  color: var(--text-tertiary);
+  color: var(--text-quaternary);
   overflow-wrap: anywhere;
   @include text-ellipsis-multiline(2);
 }
 
 .note {
   margin: 0;
-  font-size: 12px;
+  font-size: 11.5px;
   line-height: 1.5;
   color: var(--text-secondary);
   @include text-ellipsis;
@@ -131,13 +137,13 @@
   display: flex;
   align-items: flex-start;
   gap: 6px;
-  font-size: 12px;
+  font-size: 11.5px;
   line-height: 1.45;
   color: var(--warning-text);
   background: var(--warning-bg);
   border: 1px solid var(--warning-border);
-  border-radius: 8px;
-  padding: 7px 9px;
+  border-radius: var(--radius-sm);
+  padding: 6px 8px;
 
   span {
     min-width: 0;
@@ -169,10 +175,10 @@
 .healthLabel {
   font-family: $font-mono;
   font-size: 10px;
-  font-weight: 700;
+  font-weight: 620;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: var(--text-tertiary);
+  color: var(--text-quaternary);
 }
 
 .healthCounts {
@@ -270,10 +276,12 @@
   gap: 2px;
   min-width: 150px;
   padding: 8px 10px;
-  border-radius: 10px;
-  background: var(--floating-surface);
-  border: 1px solid var(--border-color);
-  box-shadow: var(--floating-shadow);
+  border-radius: var(--radius-md);
+  background: var(--material-glass-strong);
+  backdrop-filter: var(--glass-backdrop-filter);
+  -webkit-backdrop-filter: var(--glass-backdrop-filter);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--window-shadow);
   pointer-events: none;
   font-family: $font-mono;
   font-size: 11px;
@@ -323,9 +331,9 @@
   flex-wrap: wrap;
   gap: 4px 7px;
   font-family: $font-mono;
-  font-size: 11.5px;
+  font-size: 11px;
   font-variant-numeric: tabular-nums;
-  color: var(--text-tertiary);
+  color: var(--text-quaternary);
 }
 
 .metaDivider {
@@ -375,7 +383,7 @@
   justify-content: space-between;
   gap: 10px;
   padding-top: 12px;
-  border-top: 1px solid color-mix(in srgb, var(--border-color) 70%, transparent);
+  border-top: 1px solid var(--hairline);
 }
 
 .actionsMain {

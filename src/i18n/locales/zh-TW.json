@@ -97,11 +97,11 @@
   },
   "nav": {
     "dashboard": "儀表板",
-    "quick_start": "快速開始",
     "ai_providers": "AI 供應商",
     "auth_files": "驗證檔案",
     "oauth": "OAuth 登入",
     "quota_management": "配額管理",
+    "model_prices": "模型價格",
     "plugins": "插件管理",
     "plugin_store": "插件商店",
     "config_management": "設定面板",
@@ -117,11 +117,11 @@
   },
   "nav_meta": {
     "dashboard": "運行總覽",
-    "quick_start": "APIKEY.FUN 快速設定",
     "ai_providers": "上游模型路由",
     "auth_files": "Auth 檔案與憑證",
     "oauth": "OAuth 授權登入",
     "quota_management": "API Key 與限額",
+    "model_prices": "單價與覆蓋表",
     "plugins": "插件啟停與設定",
     "plugin_store": "探索並安裝插件",
     "logs": "請求追蹤與排查",
@@ -200,7 +200,32 @@
     "cta_system_desc": "版本詳情與管理中心資訊。",
     "window_m": "{{minutes}} 分鐘",
     "window_h": "{{hours}} 小時",
-    "window_hm": "{{hours}} 小時 {{minutes}} 分"
+    "window_hm": "{{hours}} 小時 {{minutes}} 分",
+    "usage_eyebrow": "用量",
+    "usage_title": "Token 與預估費用",
+    "usage_description": "依日期、模型與供應商彙總的預估消費。費用依各模型公開價格估算，僅供參考，不代表實際帳單。",
+    "usage_range_label": "統計視窗",
+    "usage_range_7d": "7 天",
+    "usage_range_30d": "30 天",
+    "usage_range_24h": "24 小時",
+    "usage_empty_title": "尚無已定價的用量",
+    "usage_empty_hint": "當請求命中已知價格的模型後，這裡會顯示費用。",
+    "usage_histogram_legend": "預估費用",
+    "usage_histogram_requests": "{{value}} 次請求",
+    "usage_histogram_summary": "預估費用 {{cost}}，共 {{requests}} 次請求",
+    "usage_unit_hour": "時段",
+    "usage_unit_day": "日期",
+    "usage_column_cost": "費用",
+    "usage_column_requests": "請求數",
+    "usage_table": "以表格檢視",
+    "usage_models_title": "各模型費用",
+    "usage_providers_title": "各供應商費用",
+    "usage_breakdown_empty": "此視窗內沒有已定價的用量。",
+    "usage_breakdown_requests": "{{value}} 次",
+    "usage_error_unsupported": "後端尚未提供用量統計介面。請升級伺服端後重新整理頁面。",
+    "usage_loading": "正在載入用量統計…",
+    "usage_retry": "重試",
+    "usage_refreshing": "更新中…"
   },
   "basic_settings": {
     "debug_enable": "啟用除錯模式",
@@ -805,7 +830,6 @@
     "device_code_copy": "複製裝置碼",
     "kimi_oauth_title": "Kimi OAuth",
     "kimi_oauth_button": "使用 Kimi 登入",
-    "kimi_sign_up_button": "立即註冊",
     "kimi_oauth_hint": "透過裝置授權快速登入 Kimi，完成後將自動取得並儲存驗證檔案。",
     "kimi_oauth_url_label": "授權連結:",
     "kimi_open_link": "開啟連結",
@@ -1614,7 +1638,6 @@
     },
     "categories": {
       "title": "提供商",
-      "quickFill": "快速接入",
       "activeCount": "{{active}}/{{total}} 活躍"
     },
     "providerNames": {
@@ -1626,9 +1649,6 @@
       "claude": "Claude",
       "vertex": "Vertex",
       "openaiCompatibility": "OpenAI 相容",
-      "apikeyFun": "APIKEY.FUN",
-      "fennoAI": "FennoAI",
-      "qiniuCloud": "七牛雲",
       "kimi": "Kimi"
     },
     "table": {
@@ -1651,22 +1671,8 @@
       "description": "在 {{route}} 下管理資源"
     },
     "sponsor": {
-      "protocolSummary": "Anthropic / OpenAI / Gemini / Codex API (Responses)",
       "detailHint": "{{provider}} 會按協議分別寫入對應的 API Key 設定,此處只做聚合管理。",
-      "registerLink": "點此註冊",
-      "registerNow": "立即註冊",
-      "kimiPromo": "新用戶首次成功儲值，贈送儲值金額 10% 的 API 額度，最高贈送 ¥1000，優惠截至 9 月 30 日",
-      "dashboardLink": "控制面板",
-      "emptyRegisterHint": "尚未新增設定",
       "apiKeyHint": "此金鑰只會寫入目前選擇的分組/協議設定。",
-      "usageCheck": "查詢額度",
-      "usageChecking": "查詢中",
-      "usageRemaining": "剩餘額度: {{amount}} {{unit}}",
-      "usageBreakdown": "已用 {{used}} / 總額 {{limit}}",
-      "usageStatus": "狀態: {{status}}",
-      "usageInvalid": "Key 無效",
-      "usageEmpty": "端點未回傳額度資料",
-      "usageApiKeyRequired": "API 金鑰必填",
       "aggregationConflict": "此聚合提供商包含多筆後端設定或多個 OpenAI 金鑰。為避免資料遺失，請在原始碼設定中編輯。",
       "partialMutationWarning": "操作失敗，但一個或多個協議可能已更新。已重新讀取最新設定，請檢查後再重試。",
       "groupedKeysTitle": "分組金鑰",
@@ -1680,21 +1686,13 @@
       "urlMode": "{{provider}} URL",
       "urlHint": "不同 URL 的使用規範一致,儲存時只會寫入目前分組協議對應位址。",
       "urlOptions": {
-        "standard": "普通 URL",
-        "direct": "專線直連 URL",
         "domestic": "中國大陸線路",
-        "overseas": "海外線路",
-        "mainlandChina": "中國大陸（推薦）",
-        "global": "全球"
+        "overseas": "海外線路"
       },
       "urlOptionDescriptions": {
         "domestic": "面向中國大陸使用者和部署在中國大陸網路環境中的業務，通常可獲得更低延遲。",
-        "overseas": "面向海外部署、跨境存取或需要存取境外模型的業務。",
-        "mainlandChinaRecommended": "推薦中國大陸使用者和部署在中國大陸網路環境中的業務使用。",
-        "global": "適用於全球其他地區的使用者和部署環境。"
+        "overseas": "面向海外部署、跨境存取或需要存取境外模型的業務。"
       },
-      "modelsTitle": "協議模型設定",
-      "modelsHint": "可分別限制或別名映射 Codex API、Anthropic、Gemini 與 OpenAI 相容入口的模型。",
       "protocolModels": {
         "codex": "Codex API 模型",
         "anthropic": "Anthropic 模型",
@@ -1711,10 +1709,6 @@
         "keyRequired": "請為每個分組金鑰填寫 API Key。",
         "protocolDuplicate": "每個協議只能新增一個分組金鑰。"
       },
-      "openaiEntries": "OpenAI 相容金鑰數",
-      "codexEntries": "Codex API 金鑰數",
-      "anthropicEntries": "Anthropic 金鑰數",
-      "geminiEntries": "Gemini 金鑰數",
       "protocols": {
         "anthropic": "Anthropic",
         "openai": "OpenAI 相容",
@@ -1880,5 +1874,47 @@
     "modelCatalog": {
       "notLoaded": "未載入"
     }
+  },
+  "model_prices": {
+    "eyebrow": "參考資料",
+    "title": "模型價格",
+    "description": "用於估算請求消費的單價，統一以每百萬 token 呈現。標示「覆蓋」的資料列來自設定檔中的 `model-price-overrides`，優先於同步價格。",
+    "meta_entries": "已收錄模型",
+    "meta_overrides": "覆蓋筆數",
+    "meta_updated": "上次同步",
+    "meta_updated_unknown": "尚未同步",
+    "search_label": "搜尋模型",
+    "search_placeholder": "例如 gemini-2.5-pro",
+    "search_action": "搜尋",
+    "result_filtered": "符合「{{query}}」共 {{count}} 個",
+    "result_total": "共 {{count}} 個模型",
+    "sync_action": "同步價格",
+    "sync_busy": "正在與上游價格來源同步…",
+    "sync_done": "已同步 {{count}} 個模型。",
+    "sync_failed": "同步失敗：{{message}}",
+    "sync_hint": "上游價格只在服務啟動時拉取一次。需要立刻取得最新目錄時請點「同步價格」；若上游無法連線，現有價格會原樣保留。",
+    "error_unsupported": "目前後端版本尚未提供價格目錄介面，升級伺服器後即可檢視。",
+    "retry": "重試",
+    "disconnected_title": "未連線",
+    "disconnected_hint": "連線管理介面後才能檢視模型價格。",
+    "loading": "正在載入價格…",
+    "no_match_title": "沒有符合「{{query}}」的模型",
+    "no_match_hint": "試試更短的模型名稱片段，或清除搜尋條件。",
+    "clear_search": "清除搜尋",
+    "empty_title": "暫無價格資料",
+    "empty_hint": "價格表為空。上游價格只在服務啟動時拉取一次，可點上方「同步價格」立刻取得；若持續失敗請檢查伺服器日誌。",
+    "col_model": "模型",
+    "col_input": "輸入",
+    "col_output": "輸出",
+    "col_cache_read": "快取讀取",
+    "col_cache_write": "快取寫入",
+    "col_reasoning": "推理",
+    "table_label": "模型價格表",
+    "badge_override": "覆蓋",
+    "unit_per_million": "單價皆為美元 / 每百萬 token。「—」表示未公布該項價格。",
+    "not_published": "—",
+    "pagination_prev": "上一頁",
+    "pagination_info": "第 {{current}} / {{total}} 頁 · 共 {{count}} 個模型",
+    "pagination_next": "下一頁"
   }
 }

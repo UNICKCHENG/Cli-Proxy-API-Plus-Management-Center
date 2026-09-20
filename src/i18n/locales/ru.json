@@ -97,11 +97,11 @@
   },
   "nav": {
     "dashboard": "Панель",
-    "quick_start": "Быстрый старт",
     "ai_providers": "Поставщики AI",
     "auth_files": "Файлы аутентификации",
     "oauth": "OAuth вход",
     "quota_management": "Управление квотами",
+    "model_prices": "Цены моделей",
     "plugins": "Плагины",
     "plugin_store": "Магазин плагинов",
     "config_management": "Панель конфигурации",
@@ -116,11 +116,11 @@
   },
   "nav_meta": {
     "dashboard": "Обзор работы",
-    "quick_start": "Настройка APIKEY.FUN",
     "ai_providers": "Маршрутизация моделей",
     "auth_files": "Файлы и учётные данные",
     "oauth": "Авторизация OAuth",
     "quota_management": "API ключи и лимиты",
+    "model_prices": "Таблица цен и переопределений",
     "plugins": "Переключатели и ресурсы плагинов",
     "plugin_store": "Поиск и установка плагинов",
     "logs": "Трассировка запросов",
@@ -199,7 +199,32 @@
     "cta_system_desc": "Информация о версии и центре управления.",
     "window_m": "{{minutes}} мин",
     "window_h": "{{hours}} ч",
-    "window_hm": "{{hours}} ч {{minutes}} мин"
+    "window_hm": "{{hours}} ч {{minutes}} мин",
+    "usage_eyebrow": "Использование",
+    "usage_title": "Токены и оценка стоимости",
+    "usage_description": "Оценка расходов по дням, моделям и провайдерам. Стоимость рассчитана по публичным ценам моделей и не является счётом.",
+    "usage_range_label": "Период статистики",
+    "usage_range_7d": "7 дней",
+    "usage_range_30d": "30 дней",
+    "usage_range_24h": "24 часа",
+    "usage_empty_title": "Пока нет оценённого использования",
+    "usage_empty_hint": "Стоимость появится, когда запросы пройдут через модели с известной ценой.",
+    "usage_histogram_legend": "Оценка стоимости",
+    "usage_histogram_requests": "{{value}} запросов",
+    "usage_histogram_summary": "Оценка стоимости {{cost}} при {{requests}} запросах",
+    "usage_unit_hour": "Час",
+    "usage_unit_day": "Дата",
+    "usage_column_cost": "Стоимость",
+    "usage_column_requests": "Запросы",
+    "usage_table": "Показать таблицей",
+    "usage_models_title": "Стоимость по моделям",
+    "usage_providers_title": "Стоимость по провайдерам",
+    "usage_breakdown_empty": "В этом периоде нет оценённого использования.",
+    "usage_breakdown_requests": "{{value}} запр.",
+    "usage_error_unsupported": "Сервер ещё не предоставляет статистику использования. Обновите сервер и перезагрузите страницу.",
+    "usage_loading": "Загрузка статистики использования…",
+    "usage_retry": "Повторить",
+    "usage_refreshing": "Обновление…"
   },
   "basic_settings": {
     "debug_enable": "Включить режим отладки",
@@ -810,7 +835,6 @@
     "device_code_copy": "Скопировать код устройства",
     "kimi_oauth_title": "Kimi OAuth",
     "kimi_oauth_button": "Войти через Kimi",
-    "kimi_sign_up_button": "Зарегистрироваться сейчас",
     "kimi_oauth_hint": "Быстро войдите в Kimi через авторизацию устройства. Файлы авторизации будут получены и сохранены автоматически.",
     "kimi_oauth_url_label": "URL авторизации:",
     "kimi_open_link": "Открыть ссылку",
@@ -1584,7 +1608,6 @@
     },
     "categories": {
       "title": "Провайдеры",
-      "quickFill": "Быстрое заполнение",
       "activeCount": "{{active}}/{{total}} активных"
     },
     "providerNames": {
@@ -1596,9 +1619,6 @@
       "claude": "Claude",
       "vertex": "Vertex",
       "openaiCompatibility": "OpenAI-совместимый",
-      "apikeyFun": "APIKEY.FUN",
-      "fennoAI": "FennoAI",
-      "qiniuCloud": "Qiniu Cloud",
       "kimi": "Kimi"
     },
     "table": {
@@ -1621,22 +1641,8 @@
       "description": "Управление ресурсами {{route}}"
     },
     "sponsor": {
-      "protocolSummary": "Anthropic / OpenAI / Gemini / Codex API (Responses)",
       "detailHint": "{{provider}} сохраняется в соответствующие конфигурации API key по протоколам; здесь они управляются вместе.",
-      "registerLink": "Зарегистрироваться",
-      "registerNow": "Зарегистрироваться сейчас",
-      "kimiPromo": "Новые пользователи получают API-квоту в размере 10% от первого успешного пополнения, максимум ¥1000. Предложение действует до 30 сентября.",
-      "dashboardLink": "Панель управления",
-      "emptyRegisterHint": "Конфигурации пока нет.",
       "apiKeyHint": "Этот ключ записывается только в выбранную группу/протокол.",
-      "usageCheck": "Проверить квоту",
-      "usageChecking": "Проверка",
-      "usageRemaining": "Остаток: {{amount}} {{unit}}",
-      "usageBreakdown": "Использовано {{used}} / Лимит {{limit}}",
-      "usageStatus": "Статус: {{status}}",
-      "usageInvalid": "Недействительный ключ",
-      "usageEmpty": "Endpoint не вернул данные квоты.",
-      "usageApiKeyRequired": "Требуется API key",
       "aggregationConflict": "Этот объединённый провайдер содержит несколько серверных конфигураций или ключей OpenAI. Чтобы избежать потери данных, измените исходную конфигурацию.",
       "partialMutationWarning": "Операция завершилась ошибкой, но один или несколько протоколов могли обновиться. Последняя конфигурация загружена повторно; проверьте её перед повторной попыткой.",
       "groupedKeysTitle": "Групповые ключи",
@@ -1650,21 +1656,13 @@
       "urlMode": "{{provider}} URL",
       "urlHint": "Все URL используют одинаковые правила API. При сохранении записывается только endpoint текущего группового протокола.",
       "urlOptions": {
-        "standard": "Обычный URL",
-        "direct": "Прямой URL",
         "domestic": "Маршрут для материкового Китая",
-        "overseas": "Зарубежный маршрут",
-        "mainlandChina": "Материковый Китай (рекомендуется)",
-        "global": "Глобальный"
+        "overseas": "Зарубежный маршрут"
       },
       "urlOptionDescriptions": {
         "domestic": "Для пользователей и нагрузок в материковом Китае; обычно дает меньшую задержку в сетях материкового Китая.",
-        "overseas": "Для зарубежных развертываний, трансграничного доступа или задач, которым нужны зарубежные модели.",
-        "mainlandChinaRecommended": "Рекомендуется для пользователей и нагрузок в сетях материкового Китая.",
-        "global": "Для пользователей и нагрузок во всех остальных регионах."
+        "overseas": "Для зарубежных развертываний, трансграничного доступа или задач, которым нужны зарубежные модели."
       },
-      "modelsTitle": "Настройки моделей по протоколам",
-      "modelsHint": "Настраивайте allowlist моделей и алиасы отдельно для маршрутов Codex API, Anthropic, Gemini и OpenAI-compatible.",
       "protocolModels": {
         "codex": "Модели Codex API",
         "anthropic": "Модели Anthropic",
@@ -1681,10 +1679,6 @@
         "keyRequired": "Введите API key для каждого группового ключа.",
         "protocolDuplicate": "Для каждого протокола можно добавить только один групповой ключ."
       },
-      "openaiEntries": "Ключей OpenAI-compatible",
-      "codexEntries": "Ключей Codex API",
-      "anthropicEntries": "Ключей Anthropic",
-      "geminiEntries": "Ключей Gemini",
       "protocols": {
         "anthropic": "Anthropic",
         "openai": "OpenAI-compatible",
@@ -1850,5 +1844,47 @@
     "modelCatalog": {
       "notLoaded": "Не загружено"
     }
+  },
+  "model_prices": {
+    "eyebrow": "Справочные данные",
+    "title": "Цены моделей",
+    "description": "Цены за токен, по которым оценивается стоимость запросов, показаны за миллион токенов. Строки с пометкой «Переопределено» берутся из `model-price-overrides` в файле конфигурации и имеют приоритет над синхронизированными ценами.",
+    "meta_entries": "Моделей",
+    "meta_overrides": "Переопределений",
+    "meta_updated": "Синхронизировано",
+    "meta_updated_unknown": "Ещё не синхронизировано",
+    "search_label": "Поиск моделей",
+    "search_placeholder": "например, gemini-2.5-pro",
+    "search_action": "Найти",
+    "result_filtered": "Найдено по «{{query}}»: {{count}}",
+    "result_total": "Всего моделей: {{count}}",
+    "sync_action": "Синхронизировать цены",
+    "sync_busy": "Синхронизация с источником цен…",
+    "sync_done": "Синхронизировано моделей: {{count}}.",
+    "sync_failed": "Не удалось синхронизировать: {{message}}",
+    "sync_hint": "Цены загружаются один раз при запуске сервера. Нажмите «Синхронизировать цены», чтобы получить актуальный каталог сейчас; если источник недоступен, текущие цены сохранятся.",
+    "error_unsupported": "Эта сборка серверной части пока не предоставляет каталог цен. Обновите сервер.",
+    "retry": "Повторить",
+    "disconnected_title": "Нет подключения",
+    "disconnected_hint": "Подключитесь к Management API, чтобы просмотреть цены моделей.",
+    "loading": "Загрузка цен…",
+    "no_match_title": "Нет моделей по запросу «{{query}}»",
+    "no_match_hint": "Попробуйте более короткий фрагмент названия модели или очистите поиск.",
+    "clear_search": "Очистить поиск",
+    "empty_title": "Цены недоступны",
+    "empty_hint": "Таблица цен пуста. Цены загружаются один раз при запуске сервера — нажмите «Синхронизировать цены» выше. Если это не помогает, проверьте журнал сервера.",
+    "col_model": "Модель",
+    "col_input": "Ввод",
+    "col_output": "Вывод",
+    "col_cache_read": "Чтение кэша",
+    "col_cache_write": "Запись кэша",
+    "col_reasoning": "Рассуждения",
+    "table_label": "Таблица цен моделей",
+    "badge_override": "Переопределено",
+    "unit_per_million": "Все цены указаны в USD за 1 млн токенов. «—» означает, что цена не опубликована.",
+    "not_published": "—",
+    "pagination_prev": "Назад",
+    "pagination_info": "Страница {{current}} / {{total}} · всего {{count}}",
+    "pagination_next": "Вперёд"
   }
 }

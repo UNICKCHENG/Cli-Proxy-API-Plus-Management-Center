@@ -13,6 +13,7 @@ import {
 import { useTranslation } from 'react-i18next';
 import type { OAuthModelAliasEntry } from '@/types';
 import { useThemeStore } from '@/stores';
+import { createRafCoalescedCallback } from '@/utils/raf';
 import { AliasColumn, ProviderColumn, SourceColumn } from './ModelMappingDiagramColumns';
 import { DiagramContextMenu } from './ModelMappingDiagramContextMenu';
 import {
@@ -310,10 +311,13 @@ export const ModelMappingDiagram = forwardRef<ModelMappingDiagramRef, ModelMappi
     useLayoutEffect(() => {
       // updateLines is called after layout is calculated, ensuring elements are in place.
       const raf = requestAnimationFrame(updateLines);
-      window.addEventListener('resize', updateLines);
+      // 重算连线要对每个节点做 getBoundingClientRect（强制布局），resize 期间必须按帧合并。
+      const coalesced = createRafCoalescedCallback(updateLines);
+      window.addEventListener('resize', coalesced.schedule);
       return () => {
         cancelAnimationFrame(raf);
-        window.removeEventListener('resize', updateLines);
+        window.removeEventListener('resize', coalesced.schedule);
+        coalesced.cancel();
       };
     }, [updateLines, aliasNodes]);
 

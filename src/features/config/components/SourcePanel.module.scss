@@ -6,9 +6,9 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  flex: 1 1 240px;
+  flex: 0 1 260px;
   min-width: 0;
-  max-width: 560px;
+  max-width: 320px;
 }
 
 .searchInputWrapper {
@@ -25,8 +25,8 @@
 }
 
 .searchInput {
-  height: 38px !important;
-  border-radius: 10px !important;
+  height: var(--control-h-md) !important;
+  border-radius: var(--radius-sm) !important;
   font-size: 13px !important;
   padding-right: 128px !important;
 }
@@ -40,13 +40,13 @@
 .searchCount {
   display: inline-flex;
   align-items: center;
-  min-height: 26px;
+  min-height: 24px;
   padding: 0 8px;
   border-radius: $radius-full;
-  color: var(--text-secondary);
+  color: var(--text-tertiary);
   font-family: $font-mono;
-  font-size: 11.5px;
-  font-weight: 650;
+  font-size: 11px;
+  font-weight: 580;
   font-variant-numeric: tabular-nums;
   background: color-mix(in srgb, var(--text-primary) 6%, transparent);
   pointer-events: none;
@@ -58,14 +58,14 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 30px;
-  height: 30px;
+  width: var(--control-h-sm);
+  height: var(--control-h-sm);
   border-radius: $radius-full;
-  border: 1px solid var(--text-primary);
-  background: var(--text-primary);
-  color: var(--bg-secondary);
+  border: 1px solid var(--primary-color);
+  background: var(--primary-color);
+  color: var(--primary-contrast);
   transition:
-    transform var(--dur-press, 160ms) var(--ease-out-strong, ease-out),
+    transform var(--dur-press) var(--ease-out-strong),
     background-color $transition-fast,
     border-color $transition-fast,
     opacity $transition-fast;
@@ -82,7 +82,7 @@
 
 @media (hover: hover) and (pointer: fine) {
   .searchButton:hover:not(:disabled) {
-    background: color-mix(in srgb, var(--text-primary) 86%, var(--bg-secondary));
+    background: var(--primary-hover);
     border-color: transparent;
   }
 }
@@ -93,11 +93,11 @@
   flex-shrink: 0;
 
   button {
-    min-width: 38px;
-    width: 38px;
-    height: 38px;
+    min-width: var(--control-h-md);
+    width: var(--control-h-md);
+    height: var(--control-h-md);
     padding: 0 !important;
-    border-radius: 10px;
+    border-radius: var(--radius-sm);
   }
 }
 
@@ -107,10 +107,11 @@
   width: 100%;
   flex: 0 0 auto;
   height: clamp(500px, 70vh, 1040px);
-  border: 1px solid var(--border-color);
-  border-radius: 14px;
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius-lg);
   overflow: hidden;
   background: var(--bg-primary);
+  box-shadow: $shadow-sm;
 
   @supports (height: 100dvh) {
     height: clamp(500px, 70dvh, 1040px);
@@ -119,7 +120,7 @@
   :global {
     .cm-editor {
       height: 100%;
-      font-size: 13px;
+      font-size: 12.5px;
       font-family: $font-mono;
       background: transparent;
     }
@@ -132,8 +133,8 @@
     }
 
     .cm-gutters {
-      border-right: 1px solid var(--border-color);
-      background: color-mix(in srgb, var(--bg-secondary) 86%, transparent);
+      border-right: 1px solid var(--hairline);
+      background: var(--bg-tertiary);
     }
 
     .cm-lineNumbers .cm-gutterElement {
@@ -148,16 +149,16 @@
     }
 
     .cm-selectionMatch {
-      background: rgba(224, 170, 20, 0.24);
+      background: color-mix(in srgb, var(--warning-color) 26%, transparent);
     }
 
     .cm-searchMatch {
-      background: rgba(224, 170, 20, 0.32);
-      outline: 1px solid rgba(224, 170, 20, 0.48);
+      background: color-mix(in srgb, var(--warning-color) 34%, transparent);
+      outline: 1px solid color-mix(in srgb, var(--warning-color) 50%, transparent);
     }
 
     .cm-searchMatch-selected {
-      background: rgba(198, 87, 70, 0.32);
+      background: color-mix(in srgb, var(--error-color) 32%, transparent);
     }
   }
 }

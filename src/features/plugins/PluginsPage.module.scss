@@ -6,7 +6,7 @@
 .page {
   display: flex;
   flex-direction: column;
-  gap: $spacing-lg;
+  gap: 14px;
   width: 100%;
 }
 
@@ -15,21 +15,22 @@
 .pageHeader {
   display: flex;
   flex-direction: column;
-  gap: $spacing-sm;
+  gap: 3px;
 }
 
 .title {
   margin: 0;
   color: var(--text-primary);
-  font-size: 28px;
-  font-weight: 700;
+  font-size: 21px;
+  font-weight: 660;
   line-height: 1.2;
+  letter-spacing: -0.014em;
 }
 
 .description {
   margin: 0;
   color: var(--text-secondary);
-  font-size: 14px;
+  font-size: 12.5px;
   line-height: 1.5;
 }
 
@@ -37,21 +38,21 @@
 
 .errorBox,
 .warningBox {
-  padding: $spacing-md;
-  border-radius: $radius-md;
-  font-size: 14px;
+  padding: 10px 12px;
+  border-radius: var(--radius-md);
+  font-size: 12.5px;
   line-height: 1.5;
 }
 
 .errorBox {
-  border: 1px solid var(--danger-color);
-  background: rgba($error-color, 0.1);
-  color: var(--danger-color);
+  border: 1px solid color-mix(in srgb, var(--error-color) 34%, transparent);
+  background: color-mix(in srgb, var(--error-color) 9%, transparent);
+  color: var(--error-color);
 }
 
 .warningBox {
-  border: 1px solid color-mix(in srgb, var(--warning-color, #c65746) 42%, var(--border-color));
-  background: color-mix(in srgb, var(--warning-color, #c65746) 9%, var(--bg-secondary));
+  border: 1px solid color-mix(in srgb, var(--warning-color) 36%, transparent);
+  background: color-mix(in srgb, var(--warning-color) 9%, transparent);
   color: var(--text-primary);
 }
 
@@ -61,10 +62,10 @@
   display: flex;
   align-items: center;
   gap: 10px;
-  padding: 10px 14px;
-  border-radius: 10px;
-  border: 1px solid color-mix(in srgb, var(--border-color) 60%, transparent);
-  background: color-mix(in srgb, var(--bg-secondary) 60%, transparent);
+  padding: 9px 12px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--hairline);
+  background: var(--bg-tertiary);
   flex-wrap: wrap;
 }
 
@@ -74,12 +75,12 @@
   max-width: 100%;
   align-items: center;
   gap: 6px;
-  padding: 5px 12px;
+  padding: 4px 11px;
   border-radius: $radius-full;
-  border: 1px solid color-mix(in srgb, var(--border-color) 50%, transparent);
-  background: color-mix(in srgb, var(--bg-primary) 56%, transparent);
-  font-size: 12px;
-  font-weight: 600;
+  border: 1px solid var(--hairline);
+  background: var(--bg-primary);
+  font-size: 11.5px;
+  font-weight: 580;
   white-space: nowrap;
 }
 
@@ -92,7 +93,7 @@
 
 .statusDotOn {
   background: $success-color;
-  box-shadow: 0 0 6px rgba($success-color, 0.5);
+  box-shadow: 0 0 0 3px color-mix(in srgb, $success-color 18%, transparent);
 }
 
 .statusDotOff {
@@ -105,7 +106,7 @@
 
 .statusValue {
   color: var(--text-primary);
-  font-weight: 700;
+  font-weight: 620;
 }
 
 .statusPathValue {
@@ -119,8 +120,8 @@
 
 .statusDivider {
   width: 1px;
-  height: 20px;
-  background: color-mix(in srgb, var(--border-color) 60%, transparent);
+  height: 18px;
+  background: var(--hairline);
   flex-shrink: 0;
 
   @include mobile {
@@ -133,11 +134,11 @@
 .toolbar {
   display: flex;
   align-items: center;
-  gap: $spacing-sm;
+  gap: 10px;
 
   :global(.form-group) {
-    flex: 1;
-    max-width: 480px;
+    flex: 0 1 260px;
+    max-width: 320px;
     margin: 0;
   }
 
@@ -167,45 +168,45 @@
   display: flex;
   flex-direction: column;
   gap: 1px;
-  border: 1px solid color-mix(in srgb, var(--border-color) 70%, transparent);
-  border-radius: $radius-lg;
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius-lg);
   overflow: hidden;
-  background: color-mix(in srgb, var(--border-color) 30%, transparent);
+  background: var(--hairline);
 }
 
 // ─── Plugin Row ─────────────────────────────────────────
 
 .pluginRow {
   display: grid;
-  grid-template-columns: 40px 1fr auto;
+  grid-template-columns: 38px 1fr auto;
   align-items: center;
-  gap: $spacing-md;
-  padding: $spacing-md $spacing-lg;
+  gap: 12px;
+  padding: 12px 14px;
   background: var(--bg-primary);
   transition: background-color $transition-fast;
 
   &:hover {
-    background: var(--bg-hover);
+    background: color-mix(in srgb, var(--text-primary) 3.5%, var(--bg-primary));
   }
 
   @include mobile {
-    grid-template-columns: 36px 1fr;
+    grid-template-columns: 34px 1fr;
     grid-template-rows: auto auto;
-    gap: $spacing-sm;
-    padding: $spacing-md;
+    gap: 10px;
+    padding: 12px;
   }
 }
 
 .logoBox {
   display: inline-flex;
-  width: 40px;
-  height: 40px;
+  width: 38px;
+  height: 38px;
   align-items: center;
   justify-content: center;
   overflow: hidden;
-  border-radius: 10px;
-  border: 1px solid color-mix(in srgb, var(--border-color) 50%, transparent);
-  background: color-mix(in srgb, var(--bg-tertiary) 60%, transparent);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--hairline);
+  background: var(--bg-tertiary);
   color: var(--text-secondary);
   flex-shrink: 0;
 
@@ -216,9 +217,9 @@
   }
 
   @include mobile {
-    width: 36px;
-    height: 36px;
-    border-radius: 8px;
+    width: 34px;
+    height: 34px;
+    border-radius: var(--radius-sm);
   }
 }
 
@@ -239,24 +240,24 @@
     min-width: 0;
     margin: 0;
     color: var(--text-primary);
-    font-size: 15px;
-    font-weight: 650;
+    font-size: 14px;
+    font-weight: 620;
     line-height: 1.3;
     @include text-ellipsis;
   }
 }
 
 .pluginId {
-  color: var(--text-tertiary);
+  color: var(--text-quaternary);
   font-family: $font-mono;
-  font-size: 12px;
+  font-size: 11px;
   @include text-ellipsis;
 }
 
 .pluginMeta {
   display: flex;
   align-items: center;
-  gap: $spacing-sm;
+  gap: 10px;
   flex-wrap: wrap;
   margin-top: 2px;
 }
@@ -268,12 +269,12 @@
   align-items: center;
   gap: 4px;
   color: var(--text-tertiary);
-  font-size: 12px;
+  font-size: 11.5px;
   white-space: nowrap;
 
   strong {
     color: var(--text-secondary);
-    font-weight: 600;
+    font-weight: 580;
   }
 }
 
@@ -304,37 +305,37 @@
 .badgeWarning,
 .badgeMuted {
   display: inline-flex;
-  min-height: 22px;
+  min-height: 21px;
   align-items: center;
-  border-radius: 6px;
-  padding: 2px 8px;
-  font-size: 11px;
-  font-weight: 600;
+  border-radius: var(--radius-xs);
+  padding: 2px 7px;
+  font-size: 10.5px;
+  font-weight: 580;
   line-height: 1.25;
 }
 
 .badge {
-  background: color-mix(in srgb, var(--bg-secondary) 82%, transparent);
-  border: 1px solid color-mix(in srgb, var(--border-color) 50%, transparent);
+  background: var(--bg-tertiary);
+  border: 1px solid var(--hairline);
   color: var(--text-secondary);
 }
 
 .badgeSuccess {
-  background: rgba($success-color, 0.1);
-  border: 1px solid rgba($success-color, 0.2);
-  color: var(--success-color);
+  background: color-mix(in srgb, $success-color 11%, transparent);
+  border: 1px solid color-mix(in srgb, $success-color 22%, transparent);
+  color: var(--viz-success);
 }
 
 .badgeWarning {
-  background: rgba($warning-color, 0.1);
-  border: 1px solid rgba($warning-color, 0.2);
-  color: var(--warning-color);
+  background: color-mix(in srgb, $warning-color 12%, transparent);
+  border: 1px solid color-mix(in srgb, $warning-color 24%, transparent);
+  color: var(--warning-text);
 }
 
 .badgeMuted {
-  background: color-mix(in srgb, var(--bg-secondary) 82%, transparent);
-  border: 1px solid color-mix(in srgb, var(--border-color) 40%, transparent);
-  color: var(--text-tertiary);
+  background: var(--bg-tertiary);
+  border: 1px solid var(--hairline);
+  color: var(--text-quaternary);
 }
 
 // ─── Row Actions ────────────────────────────────────────
@@ -346,7 +347,7 @@
   flex-wrap: wrap;
   align-items: center;
   justify-content: flex-end;
-  gap: $spacing-sm;
+  gap: 10px;
   flex-shrink: 0;
 
   :global(.btn > span) {
@@ -364,31 +365,28 @@
 
 .iconLink {
   display: inline-flex;
-  min-height: 30px;
+  width: var(--control-h-sm);
+  min-height: var(--control-h-sm);
   align-items: center;
   justify-content: center;
-  border: 1px solid var(--border-color);
-  border-radius: $radius-md;
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius-sm);
   background: var(--bg-primary);
-  color: var(--text-primary);
-  font-size: 12px;
-  font-weight: 600;
+  color: var(--text-secondary);
+  font-size: 11.5px;
+  font-weight: 560;
   text-decoration: none;
+  flex: 0 0 auto;
   transition:
     border-color $transition-fast,
     background-color $transition-fast,
     color $transition-fast;
 
   &:hover {
-    border-color: var(--primary-color);
-    background: var(--bg-hover);
-    color: var(--primary-color);
+    border-color: var(--border-hover);
+    background: var(--bg-tertiary);
+    color: var(--text-primary);
   }
-}
-
-.iconLink {
-  width: 30px;
-  flex: 0 0 auto;
 }
 
 // ─── Skeleton ───────────────────────────────────────────
@@ -396,23 +394,17 @@
 .skeletonRow {
   display: flex;
   align-items: center;
-  gap: $spacing-md;
-  padding: $spacing-md $spacing-lg;
+  gap: 12px;
+  padding: 12px 14px;
   background: var(--bg-primary);
 }
 
 .skeletonAvatar {
-  width: 40px;
-  height: 40px;
-  border-radius: 10px;
-  background: linear-gradient(
-    90deg,
-    color-mix(in srgb, var(--bg-secondary) 86%, transparent) 25%,
-    color-mix(in srgb, var(--bg-hover) 70%, transparent) 37%,
-    color-mix(in srgb, var(--bg-secondary) 86%, transparent) 63%
-  );
-  background-size: 400% 100%;
-  animation: skeletonPulse 1.35s ease-in-out infinite;
+  width: 38px;
+  height: 38px;
+  border-radius: var(--radius-md);
+  background: var(--bg-tertiary);
+  animation: skeletonBreathe 1.35s ease-in-out infinite;
   flex-shrink: 0;
 }
 
@@ -425,15 +417,9 @@
 
 .skeletonLine {
   height: 14px;
-  border-radius: 4px;
-  background: linear-gradient(
-    90deg,
-    color-mix(in srgb, var(--bg-secondary) 86%, transparent) 25%,
-    color-mix(in srgb, var(--bg-hover) 70%, transparent) 37%,
-    color-mix(in srgb, var(--bg-secondary) 86%, transparent) 63%
-  );
-  background-size: 400% 100%;
-  animation: skeletonPulse 1.35s ease-in-out infinite;
+  border-radius: var(--radius-xs);
+  background: var(--bg-tertiary);
+  animation: skeletonBreathe 1.35s ease-in-out infinite;
 
   &:first-child {
     width: 45%;
@@ -450,25 +436,25 @@
 .sheetFooter {
   display: flex;
   justify-content: flex-end;
-  gap: $spacing-sm;
+  gap: 10px;
 }
 
 .configForm {
   display: flex;
   flex-direction: column;
-  gap: $spacing-lg;
+  gap: 18px;
 }
 
 .formSection {
   display: flex;
   flex-direction: column;
-  gap: $spacing-md;
+  gap: 12px;
 
   h3 {
     margin: 0;
     color: var(--text-primary);
-    font-size: 16px;
-    font-weight: 700;
+    font-size: 14px;
+    font-weight: 620;
   }
 
   :global(.form-group) {
@@ -480,12 +466,12 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: $spacing-md;
-  min-height: 52px;
-  padding: $spacing-md;
-  border: 1px solid var(--border-color);
-  border-radius: $radius-md;
-  background: color-mix(in srgb, var(--bg-secondary) 72%, transparent);
+  gap: 12px;
+  min-height: 48px;
+  padding: 12px 14px;
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius-md);
+  background: var(--bg-tertiary);
 }
 
 .fieldText {
@@ -494,16 +480,16 @@
 
 .fieldLabel {
   color: var(--text-primary);
-  font-size: 14px;
-  font-weight: 650;
+  font-size: 13px;
+  font-weight: 600;
   overflow-wrap: anywhere;
 }
 
 .fieldDescription,
 .fieldHint {
-  margin-top: 4px;
-  color: var(--text-tertiary);
-  font-size: 12px;
+  margin-top: 3px;
+  color: var(--text-quaternary);
+  font-size: 11.5px;
   line-height: 1.45;
   overflow-wrap: anywhere;
 }
@@ -515,8 +501,8 @@
 
   label {
     color: var(--text-primary);
-    font-size: 14px;
-    font-weight: 600;
+    font-size: 13px;
+    font-weight: 580;
     overflow-wrap: anywhere;
   }
 }
@@ -525,13 +511,13 @@
   min-height: 148px;
   resize: vertical;
   border: 1px solid var(--border-color);
-  border-radius: $radius-md;
+  border-radius: var(--radius-md);
   padding: 10px 12px;
-  background: var(--bg-primary);
+  background: var(--material-field);
   color: var(--text-primary);
   font-family: $font-mono;
-  font-size: 13px;
-  line-height: 1.5;
+  font-size: 12.5px;
+  line-height: 1.55;
 
   &:focus {
     border-color: var(--primary-color);
@@ -542,30 +528,31 @@
 
 .fieldError {
   padding: 8px 10px;
-  border-radius: $radius-sm;
-  background: rgba($error-color, 0.1);
-  color: var(--danger-color);
-  font-size: 12px;
-  line-height: 1.4;
+  border-radius: var(--radius-sm);
+  background: color-mix(in srgb, var(--error-color) 10%, transparent);
+  color: var(--error-color);
+  font-size: 11.5px;
+  line-height: 1.45;
 }
 
 .emptyConfig {
-  padding: $spacing-md;
-  border: 1px dashed var(--border-color);
-  border-radius: $radius-md;
-  background: color-mix(in srgb, var(--bg-secondary) 70%, transparent);
+  padding: 14px;
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius-md);
+  background: var(--bg-tertiary);
   color: var(--text-secondary);
-  font-size: 14px;
+  font-size: 12.5px;
 }
 
 // ─── Animation ──────────────────────────────────────────
 
-@keyframes skeletonPulse {
-  0% {
-    background-position: 100% 0;
-  }
+@keyframes skeletonBreathe {
+  0%,
   100% {
-    background-position: 0 0;
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.55;
   }
 }
 
@@ -573,7 +560,7 @@
 
 @include mobile {
   .page {
-    gap: $spacing-md;
+    gap: 14px;
   }
 
   .sheetFooter {

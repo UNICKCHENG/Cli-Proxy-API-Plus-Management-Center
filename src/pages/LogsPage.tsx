@@ -26,6 +26,7 @@ import {
 } from '@/components/ui/icons';
 import { useHeaderRefresh } from '@/hooks/useHeaderRefresh';
 import { useLocalStorage } from '@/hooks/useLocalStorage';
+import { useIsCurrentPageLayer } from '@/components/common/PageTransitionLayer';
 import { useAuthStore, useConfigStore, useNotificationStore } from '@/stores';
 import { logsApi, type ErrorLogFile, type LogsQuery } from '@/services/api/logs';
 import { copyToClipboard } from '@/utils/clipboard';
@@ -70,8 +71,12 @@ const buildLogsQuery = (incremental: boolean, position: LogPosition): LogsQuery 
   return params;
 };
 
+// 增量去重的最大回溯行数。重叠只可能出现在两次抓取的交界处，限制窗口把一个
+// 日志里大量重复行（例如同一个错误刷屏）导致的 O(n²) 扫描压到常数级。
+const MAX_OVERLAP_SEARCH_LINES = 512;
+
 const findLineOverlap = (currentLines: string[], incomingLines: string[]): number => {
-  const maxOverlap = Math.min(currentLines.length, incomingLines.length);
+  const maxOverlap = Math.min(currentLines.length, incomingLines.length, MAX_OVERLAP_SEARCH_LINES);
 
   for (let size = maxOverlap; size > 0; size -= 1) {
     let matched = true;
@@ -137,6 +142,7 @@ type TabType = 'logs' | 'errors';
 export function LogsPage() {
   const { t } = useTranslation();
   const { showNotification, showConfirmation } = useNotificationStore();
+  const isCurrentLayer = useIsCurrentPageLayer();
   const connectionStatus = useAuthStore((state) => state.connectionStatus);
   const apiBase = useAuthStore((state) => state.apiBase);
   const managementKey = useAuthStore((state) => state.managementKey);
@@ -517,6 +523,8 @@ export function LogsPage() {
   }, [activeTab, connectionStatus, apiBase, managementKey, requestLogEnabled]);
 
   useEffect(() => {
+    // 页面层被压栈（不可见）时停止自动刷新：否则离开日志页后仍会每 8 秒拉一次接口。
+    if (!isCurrentLayer) return;
     if (!autoRefresh || connectionStatus !== 'connected' || showFileLoggingRequired) {
       return;
     }
@@ -525,7 +533,7 @@ export function LogsPage() {
     }, 8000);
     return () => window.clearInterval(id);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [autoRefresh, connectionStatus, showFileLoggingRequired]);
+  }, [autoRefresh, connectionStatus, isCurrentLayer, showFileLoggingRequired]);
 
   const visibleLines = useMemo(
     () => logState.buffer.slice(logState.visibleFrom),

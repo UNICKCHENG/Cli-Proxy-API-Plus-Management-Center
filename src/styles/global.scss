@@ -12,9 +12,21 @@
 body {
   background-color: var(--bg-secondary);
   color: var(--text-primary);
+  font-size: 14px;
+  letter-spacing: -0.005em;
   transition:
     background-color $transition-normal,
     color $transition-normal;
+}
+
+// 数字对齐：表格、指标、日志里的数值统一等宽数字
+table,
+[data-numeric] {
+  font-variant-numeric: tabular-nums;
+}
+
+::selection {
+  background: color-mix(in srgb, var(--primary-color) 26%, transparent);
 }
 
 html.modal-open,
@@ -26,22 +38,38 @@ body.modal-open .content {
   overflow: hidden;
 }
 
-// 滚动条样式
+// 滚动条：macOS 覆盖式胶囊滑块 —— 轨道透明，滑块带内边距
 ::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+  width: 11px;
+  height: 11px;
 }
 
 ::-webkit-scrollbar-track {
-  background: var(--bg-secondary);
+  background: transparent;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--border-color);
+  background-color: color-mix(in srgb, var(--text-primary) 22%, transparent);
+  background-clip: content-box;
+  border: 3px solid transparent;
   border-radius: $radius-full;
 
   &:hover {
-    background: var(--border-hover);
+    background-color: color-mix(in srgb, var(--text-primary) 36%, transparent);
+  }
+
+  &:active {
+    background-color: color-mix(in srgb, var(--text-primary) 46%, transparent);
   }
 }
 
+::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
+@supports (scrollbar-color: red blue) {
+  * {
+    scrollbar-color: color-mix(in srgb, var(--text-primary) 24%, transparent) transparent;
+    scrollbar-width: thin;
+  }
+}

@@ -1,6 +1,6 @@
 .wire {
-  /* 浅色纸面上纯 emerald 线对比不足，掺 12% 墨色压深一档；面积渐变仍用原色 */
-  --wire-color: var(--viz-success, #10b981);
+  /* 浅色纸面上纯 emerald 线对比不足，掺 12% 墨色压深一档 */
+  --wire-color: var(--viz-success);
   --wire-stroke: color-mix(in srgb, var(--wire-color) 88%, var(--text-primary));
 
   position: relative;
@@ -29,6 +29,8 @@
 }
 
 .area {
+  fill: var(--wire-color);
+  fill-opacity: 0.14;
   animation: wireFade 0.9s ease-out 1.25s backwards;
 }
 
@@ -50,7 +52,7 @@
   box-shadow: 0 0 0 0 color-mix(in srgb, var(--wire-color) 45%, transparent);
   animation: wirePulse 2.4s ease-out 1.9s infinite;
   /* 数据刷新时光点滑到新位置，而不是瞬移 */
-  transition: top 400ms var(--ease-out-strong, ease-out);
+  transition: top 400ms var(--ease-out-strong);
 }
 
 @keyframes wireDraw {

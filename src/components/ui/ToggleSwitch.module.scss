@@ -1,58 +1,93 @@
+@use '../../styles/variables' as *;
+
+/* macOS 26 开关：40×24 轨道 + 20px 滑块，按下时滑块横向"挤压" */
+
 .root {
   position: relative;
   display: inline-flex;
   align-items: center;
-  gap: $spacing-sm;
+  gap: 8px;
   cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
 }
 
-.labelLeft {
-  .label {
-    order: -1;
-  }
+.labelLeft .label {
+  order: -1;
 }
 
 .disabled {
   cursor: not-allowed;
+  opacity: 0.45;
 }
 
 .root input {
+  position: absolute;
   width: 0;
   height: 0;
   opacity: 0;
-  position: absolute;
 }
 
 .track {
-  width: 44px;
-  height: 24px;
-  background: var(--border-color);
-  border-radius: $radius-full;
   position: relative;
-  transition: background $transition-fast;
+  flex-shrink: 0;
+  width: 40px;
+  height: 24px;
+  border-radius: $radius-full;
+  background: color-mix(in srgb, var(--text-primary) 16%, transparent);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--text-primary) 5%, transparent);
+  transition:
+    background-color $transition-fast,
+    box-shadow $transition-fast;
 }
 
 .thumb {
   position: absolute;
-  top: 3px;
-  left: 3px;
-  width: 18px;
-  height: 18px;
-  background: #fff;
+  top: 2px;
+  left: 2px;
+  width: 20px;
+  height: 20px;
   border-radius: $radius-full;
-  box-shadow: $shadow-sm;
-  transition: transform $transition-fast;
+  background: #fff;
+  box-shadow:
+    0 1px 3px rgb(0 0 0 / 0.2),
+    0 0 0 0.5px rgb(0 0 0 / 0.04);
+  transition:
+    transform $transition-fast,
+    width $transition-fast;
 }
 
 .root input:checked + .track {
   background: var(--primary-color);
+  box-shadow: none;
 }
 
 .root input:checked + .track .thumb {
-  transform: translateX(20px);
+  transform: translateX(16px);
+}
+
+/* 按下时滑块变宽（macOS 的按住反馈） */
+.root:active:not(.disabled) input + .track .thumb {
+  width: 23px;
+}
+
+.root:active:not(.disabled) input:checked + .track .thumb {
+  transform: translateX(13px);
+}
+
+.root input:focus-visible + .track {
+  box-shadow: 0 0 0 3.5px color-mix(in srgb, var(--primary-color) 30%, transparent);
 }
 
 .label {
   color: var(--text-primary);
-  font-weight: 600;
+  font-size: 13px;
+  font-weight: 520;
+  line-height: 1.35;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .track,
+  .thumb {
+    transition: none;
+  }
 }

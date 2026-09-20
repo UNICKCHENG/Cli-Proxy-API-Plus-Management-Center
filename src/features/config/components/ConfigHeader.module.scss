@@ -13,17 +13,14 @@
 .copy {
   display: flex;
   flex-direction: column;
-  gap: 7px;
+  gap: 3px;
   min-width: 0;
 }
 
 .title {
+  @include page-title(21px);
+
   margin: 0;
-  font-size: clamp(26px, 3.2vw, 30px);
-  line-height: 1.15;
-  font-weight: 700;
-  letter-spacing: -0.02em;
-  color: var(--text-primary);
 }
 
 .meta {
@@ -33,17 +30,17 @@
   flex-wrap: wrap;
   gap: 4px 8px;
   font-family: $font-mono;
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 500;
   font-variant-numeric: tabular-nums;
-  letter-spacing: 0.02em;
+  letter-spacing: 0.015em;
   color: var(--text-secondary);
 
   /* 终端游标：全站页头 meta 行的结构记号 */
   &::before {
     content: '▍';
     color: var(--viz-success);
-    font-size: 13px;
+    font-size: 11px;
     line-height: 1;
     align-self: center;
     margin-right: 1px;
@@ -80,27 +77,28 @@
   flex-shrink: 0;
 }
 
-/* 次按钮：安静的文字链接 */
+/* 次按钮：安静的文字按钮 */
 .ghostAction {
   display: inline-flex;
   align-items: center;
   gap: 6px;
+  min-height: var(--control-h-md);
+  padding: 0 10px;
   border: 0;
   cursor: pointer;
   background: none;
   color: var(--text-secondary);
-  border-radius: $radius-full;
-  padding: 10px 14px;
+  border-radius: var(--radius-sm);
   font-size: 13px;
-  font-weight: 550;
-  line-height: 1;
+  font-weight: 540;
   transition:
-    color var(--dur-hover, 200ms) var(--ease-out-strong, ease-out),
-    transform var(--dur-press, 160ms) var(--ease-out-strong, ease-out);
+    background-color $transition-fast,
+    color $transition-fast,
+    transform var(--dur-press) var(--ease-out-strong);
 
   &:disabled {
     cursor: not-allowed;
-    opacity: 0.55;
+    opacity: 0.45;
   }
 
   &:active:not(:disabled) {
@@ -108,13 +106,13 @@
   }
 
   &:focus-visible {
-    outline: 2px solid var(--primary-color);
-    outline-offset: 2px;
+    @include focus-ring(2px);
   }
 }
 
 @media (hover: hover) and (pointer: fine) {
   .ghostAction:hover:not(:disabled) {
+    background: color-mix(in srgb, var(--text-primary) 7%, transparent);
     color: var(--text-primary);
   }
 }

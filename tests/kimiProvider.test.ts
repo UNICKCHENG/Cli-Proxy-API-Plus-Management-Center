@@ -5,15 +5,12 @@ import {
 } from '../src/components/providers/utils';
 import {
   KIMI_ANTHROPIC_BASE_URL,
-  KIMI_CHINESE_AFFILIATE_URL,
   KIMI_DOMESTIC_ANTHROPIC_BASE_URL,
   KIMI_DOMESTIC_BASE_URL,
   KIMI_DOMESTIC_OPENAI_BASE_URL,
-  KIMI_INTERNATIONAL_AFFILIATE_URL,
   KIMI_LEGACY_OPENAI_BASE_URL,
   KIMI_OPENAI_BASE_URL,
   buildKimiRaw,
-  getKimiAffiliateUrl,
   getKimiProtocolUrls,
   isKimiClaudeProvider,
   isKimiCodexProvider,
@@ -93,13 +90,6 @@ describe('Kimi provider', () => {
     await modelsApi.fetchModelsViaApiCall(KIMI_OPENAI_BASE_URL, 'test-key');
 
     expect(requestedUrl).toBe('https://api.moonshot.ai/v1/models');
-  });
-
-  test('uses the domestic registration link for Chinese and the international link otherwise', () => {
-    expect(getKimiAffiliateUrl('zh-CN')).toBe(KIMI_CHINESE_AFFILIATE_URL);
-    expect(getKimiAffiliateUrl('zh-TW')).toBe(KIMI_CHINESE_AFFILIATE_URL);
-    expect(getKimiAffiliateUrl('en')).toBe(KIMI_INTERNATIONAL_AFFILIATE_URL);
-    expect(getKimiAffiliateUrl('ru')).toBe(KIMI_INTERNATIONAL_AFFILIATE_URL);
   });
 
   test('uses the OAuth-style theme surface for its provider icon', () => {

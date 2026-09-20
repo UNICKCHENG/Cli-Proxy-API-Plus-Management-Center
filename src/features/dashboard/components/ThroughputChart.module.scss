@@ -94,10 +94,10 @@
   left: 0;
   right: 0;
   height: 1px;
-  background: var(--border-color);
+  background: var(--hairline);
 
   &:last-child {
-    background: var(--border-primary);
+    background: var(--border-color);
   }
 }
 
@@ -272,8 +272,8 @@
 .tooltipRate {
   margin-top: 2px;
   padding-top: 4px;
-  border-top: 1px solid var(--border-color);
-  color: var(--text-tertiary);
+  border-top: 1px solid var(--hairline);
+  color: var(--text-quaternary);
   font-variant-numeric: tabular-nums;
 }
 
@@ -312,9 +312,9 @@
 
   th,
   td {
-    padding: 5px $spacing-sm;
+    padding: 5px 10px;
     text-align: right;
-    border-bottom: 1px solid var(--border-color);
+    border-bottom: 1px solid var(--hairline);
     color: var(--text-secondary);
   }
 

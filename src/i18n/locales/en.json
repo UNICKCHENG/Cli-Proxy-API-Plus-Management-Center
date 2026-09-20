@@ -97,11 +97,11 @@
   },
   "nav": {
     "dashboard": "Dashboard",
-    "quick_start": "Quick Start",
     "ai_providers": "AI Providers",
     "auth_files": "Auth Files",
     "oauth": "OAuth Login",
     "quota_management": "Quota Management",
+    "model_prices": "Model Prices",
     "plugins": "Plugins",
     "plugin_store": "Plugin Store",
     "config_management": "Config Panel",
@@ -117,11 +117,11 @@
   },
   "nav_meta": {
     "dashboard": "Operations overview",
-    "quick_start": "APIKEY.FUN setup",
     "ai_providers": "Upstream model routing",
     "auth_files": "Auth files & credentials",
     "oauth": "OAuth authorization",
     "quota_management": "API keys & limits",
+    "model_prices": "Per-model pricing table",
     "plugins": "Plugin toggles & config",
     "plugin_store": "Discover & install plugins",
     "logs": "Request tracing",
@@ -200,7 +200,32 @@
     "cta_system_desc": "Version details and management center info.",
     "window_m": "{{minutes}}m",
     "window_h": "{{hours}}h",
-    "window_hm": "{{hours}}h {{minutes}}m"
+    "window_hm": "{{hours}}h {{minutes}}m",
+    "usage_eyebrow": "Usage",
+    "usage_title": "Tokens & estimated cost",
+    "usage_description": "Estimated spend by day, model, and provider. Costs come from each model's public price list, so treat them as an estimate rather than a bill.",
+    "usage_range_label": "Usage window",
+    "usage_range_7d": "7 days",
+    "usage_range_30d": "30 days",
+    "usage_range_24h": "24 hours",
+    "usage_empty_title": "No priced usage yet",
+    "usage_empty_hint": "Cost appears once requests run through models with a known price.",
+    "usage_histogram_legend": "Estimated cost",
+    "usage_histogram_requests": "{{value}} requests",
+    "usage_histogram_summary": "Estimated cost {{cost}} over {{requests}} requests",
+    "usage_unit_hour": "Hour",
+    "usage_unit_day": "Date",
+    "usage_column_cost": "Cost",
+    "usage_column_requests": "Requests",
+    "usage_table": "View as table",
+    "usage_models_title": "Cost by model",
+    "usage_providers_title": "Cost by provider",
+    "usage_breakdown_empty": "No priced usage in this window.",
+    "usage_breakdown_requests": "{{value}} req",
+    "usage_error_unsupported": "This backend does not expose usage statistics yet. Upgrade the server, then reload this page.",
+    "usage_loading": "Loading usage statistics…",
+    "usage_retry": "Retry",
+    "usage_refreshing": "Refreshing…"
   },
   "basic_settings": {
     "debug_enable": "Enable Debug Mode",
@@ -807,7 +832,6 @@
     "device_code_copy": "Copy device code",
     "kimi_oauth_title": "Kimi OAuth",
     "kimi_oauth_button": "Log in with Kimi",
-    "kimi_sign_up_button": "Sign Up Now",
     "kimi_oauth_hint": "Quickly log in to Kimi through device authorization. Authentication files are obtained and saved automatically.",
     "kimi_oauth_url_label": "Authorization URL:",
     "kimi_open_link": "Open Link",
@@ -1590,7 +1614,6 @@
     },
     "categories": {
       "title": "Providers",
-      "quickFill": "Quick Fill",
       "activeCount": "{{active}}/{{total}} active"
     },
     "providerNames": {
@@ -1602,9 +1625,6 @@
       "claude": "Claude",
       "vertex": "Vertex",
       "openaiCompatibility": "OpenAI Compatible",
-      "apikeyFun": "APIKEY.FUN",
-      "fennoAI": "FennoAI",
-      "qiniuCloud": "Qiniu Cloud",
       "kimi": "Kimi"
     },
     "table": {
@@ -1627,22 +1647,8 @@
       "description": "Manage resources under {{route}}"
     },
     "sponsor": {
-      "protocolSummary": "Anthropic / OpenAI / Gemini / Codex API (Responses)",
       "detailHint": "{{provider}} is persisted into the matching API key configs by protocol; this view manages them together.",
-      "registerLink": "Register here",
-      "registerNow": "Register now",
-      "kimiPromo": "New users get API credit worth 10% of their first successful top-up, up to ¥1000. Offer ends September 30.",
-      "dashboardLink": "Dashboard",
-      "emptyRegisterHint": "No configuration yet.",
       "apiKeyHint": "This key is only written to the selected group/protocol config.",
-      "usageCheck": "Check usage",
-      "usageChecking": "Checking",
-      "usageRemaining": "Remaining: {{amount}} {{unit}}",
-      "usageBreakdown": "Used {{used}} / Limit {{limit}}",
-      "usageStatus": "Status: {{status}}",
-      "usageInvalid": "Invalid key",
-      "usageEmpty": "The endpoint returned no usage data.",
-      "usageApiKeyRequired": "API key is required",
       "aggregationConflict": "This grouped provider contains multiple backend configs or OpenAI keys. Edit it in the source configuration to avoid data loss.",
       "partialMutationWarning": "The operation failed after one or more protocols may have been updated. The latest configuration was reloaded; review it before retrying.",
       "groupedKeysTitle": "Grouped keys",
@@ -1656,21 +1662,13 @@
       "urlMode": "{{provider}} URL",
       "urlHint": "All URLs use the same API conventions. Saving writes only the endpoint for the current grouped protocol.",
       "urlOptions": {
-        "standard": "Standard URL",
-        "direct": "Direct URL",
         "domestic": "China mainland route",
-        "overseas": "Overseas route",
-        "mainlandChina": "Mainland China (recommended)",
-        "global": "Global"
+        "overseas": "Overseas route"
       },
       "urlOptionDescriptions": {
         "domestic": "For users and workloads in mainland China; usually lower latency in mainland networks.",
-        "overseas": "For overseas deployments, cross-border access, or workloads that need overseas models.",
-        "mainlandChinaRecommended": "Recommended for users and workloads on mainland China networks.",
-        "global": "For users and workloads in all other regions."
+        "overseas": "For overseas deployments, cross-border access, or workloads that need overseas models."
       },
-      "modelsTitle": "Protocol model settings",
-      "modelsHint": "Configure model allowlists or aliases separately for Codex API, Anthropic, Gemini, and OpenAI-compatible routes.",
       "protocolModels": {
         "codex": "Codex API models",
         "anthropic": "Anthropic models",
@@ -1687,10 +1685,6 @@
         "keyRequired": "Enter an API key for every grouped key.",
         "protocolDuplicate": "Each protocol can only have one grouped key."
       },
-      "openaiEntries": "OpenAI-compatible keys",
-      "codexEntries": "Codex API keys",
-      "anthropicEntries": "Anthropic keys",
-      "geminiEntries": "Gemini keys",
       "protocols": {
         "anthropic": "Anthropic",
         "openai": "OpenAI Compatible",
@@ -1856,5 +1850,47 @@
     "modelCatalog": {
       "notLoaded": "Not loaded"
     }
+  },
+  "model_prices": {
+    "eyebrow": "Reference",
+    "title": "Model Prices",
+    "description": "Per-token prices used to estimate request cost, shown per million tokens. Rows marked as overridden come from `model-price-overrides` in the config file and take precedence over synced prices.",
+    "meta_entries": "Models",
+    "meta_overrides": "Overrides",
+    "meta_updated": "Last synced",
+    "meta_updated_unknown": "Not synced yet",
+    "search_label": "Search models",
+    "search_placeholder": "e.g. gemini-2.5-pro",
+    "search_action": "Search",
+    "result_filtered": "{{count}} matching “{{query}}”",
+    "result_total": "{{count}} models",
+    "sync_action": "Sync prices",
+    "sync_busy": "Syncing with the upstream price source…",
+    "sync_done": "Synced {{count}} models.",
+    "sync_failed": "Sync failed: {{message}}",
+    "sync_hint": "Prices are fetched once when the server starts. Use Sync to pull the latest catalog now; if the source is unreachable the current prices stay in place.",
+    "error_unsupported": "This backend build does not expose the price catalog yet. Update the server to see it.",
+    "retry": "Retry",
+    "disconnected_title": "Not connected",
+    "disconnected_hint": "Connect to the management API to browse model prices.",
+    "loading": "Loading prices…",
+    "no_match_title": "No model matches “{{query}}”",
+    "no_match_hint": "Try a shorter fragment of the model name, or clear the search.",
+    "clear_search": "Clear search",
+    "empty_title": "No prices available",
+    "empty_hint": "The price table is empty. Prices are fetched once when the server starts, so use Sync above to pull them now. Check the server logs if it keeps failing.",
+    "col_model": "Model",
+    "col_input": "Input",
+    "col_output": "Output",
+    "col_cache_read": "Cache read",
+    "col_cache_write": "Cache write",
+    "col_reasoning": "Reasoning",
+    "table_label": "Model price table",
+    "badge_override": "Override",
+    "unit_per_million": "All prices are USD per 1M tokens. “—” means the price is not published.",
+    "not_published": "—",
+    "pagination_prev": "Previous",
+    "pagination_info": "Page {{current}} / {{total}} · {{count}} models",
+    "pagination_next": "Next"
   }
 }

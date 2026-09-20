@@ -4,7 +4,8 @@
 .card {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 10px;
+  min-width: 0;
 }
 
 .row {
@@ -23,38 +24,19 @@
   min-width: 0;
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 3px;
 }
 
 .title {
+  @include page-title(21px);
+
   margin: 0;
-  font-size: 30px;
-  font-weight: 700;
-  line-height: 1.2;
-  color: var(--text-primary);
-}
-
-.quickStartCard {
-  gap: 14px;
-
-  .title {
-    font-size: 32px;
-    font-weight: 720;
-    line-height: 1.18;
-    letter-spacing: 0;
-  }
-
-  .btn {
-    font-size: 14px;
-    font-weight: 600;
-    line-height: 1;
-  }
 }
 
 .subtitle {
   margin: 0;
-  font-size: 14px;
-  color: var(--muted-foreground);
+  font-size: 12.5px;
+  color: var(--text-secondary);
   line-height: 1.5;
 }
 
@@ -73,34 +55,39 @@
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  height: 34px;
-  padding: 0 14px;
-  border-radius: var(--radius-md);
-  font-size: 14px;
-  font-weight: 500;
+  height: var(--control-h-md);
+  padding: 0 12px;
+  border-radius: var(--radius-sm);
+  font-size: 13px;
+  font-weight: 560;
   cursor: pointer;
   transition:
     background-color $transition-fast,
     border-color $transition-fast,
-    color $transition-fast;
+    color $transition-fast,
+    transform var(--dur-press) var(--ease-out-strong);
   border: 1px solid transparent;
   background: transparent;
   color: var(--text-primary);
 
   &:disabled {
-    opacity: 0.6;
+    opacity: 0.45;
     cursor: not-allowed;
   }
 
+  &:active:not(:disabled) {
+    transform: scale(0.97);
+  }
+
   &:focus-visible {
-    outline: 2px solid var(--primary-color);
-    outline-offset: 2px;
+    @include focus-ring(2px);
   }
 }
 
 .btnOutline {
   border-color: var(--border-color);
   background: var(--bg-primary);
+  box-shadow: $shadow-sm;
 
   &:hover:not(:disabled) {
     background: var(--bg-tertiary);
@@ -130,14 +117,14 @@
 .chip {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  padding: 5px 12px;
-  border-radius: var(--radius-md);
-  border: 1px solid var(--border-color);
-  background: var(--muted-bg);
-  color: var(--muted-foreground);
-  font-size: 13px;
-  font-weight: 500;
+  gap: 5px;
+  padding: 3px 9px;
+  border-radius: var(--radius-full);
+  border: 1px solid var(--hairline);
+  background: var(--bg-tertiary);
+  color: var(--text-secondary);
+  font-size: 11.5px;
+  font-weight: 560;
 }
 
 .chipPrimary {
@@ -172,9 +159,9 @@
 }
 
 @media (max-width: 768px) {
-  .quickStartCard {
+  .card {
     .title {
-      font-size: 28px;
+      font-size: 19px;
       line-height: 1.2;
     }
   }

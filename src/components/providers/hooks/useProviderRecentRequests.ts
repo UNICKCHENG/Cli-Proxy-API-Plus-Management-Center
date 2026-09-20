@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useInterval } from '@/hooks/useInterval';
+import { useIsCurrentPageLayer } from '@/components/common/PageTransitionLayer';
 import { apiKeyUsageApi } from '@/services/api';
 import { useAuthStore } from '@/stores';
 import {
@@ -103,6 +104,10 @@ const fetchProviderRecentRequests = async (
 
 export function useProviderRecentRequests(options: UseProviderRecentRequestsOptions = {}) {
   const enabled = options.enabled ?? true;
+  // 隐藏的页面层仍然挂载：若不停掉定时轮询，后台页面会持续强制刷新（force 会绕过
+  // 共享缓存的 freshness 判定），造成不可见的周期性网络请求。
+  const isCurrentLayer = useIsCurrentPageLayer();
+  const polling = enabled && isCurrentLayer;
   const apiBase = useAuthStore((state) => state.apiBase);
   const managementKey = useAuthStore((state) => state.managementKey);
   const cache = useMemo(
@@ -167,14 +172,17 @@ export function useProviderRecentRequests(options: UseProviderRecentRequestsOpti
       setUsageForCurrentScope(EMPTY_USAGE_BY_PROVIDER);
       return;
     }
+    // 重新变为可见层时补一次取值（命中共享缓存则基本零成本），但隐藏期间不清空已有数据，
+    // 这样回到该页面时首帧直接展示上次结果，不会闪空。
+    if (!isCurrentLayer) return;
     void loadRecentRequests().catch(() => {});
-  }, [enabled, loadRecentRequests, setUsageForCurrentScope]);
+  }, [enabled, isCurrentLayer, loadRecentRequests, setUsageForCurrentScope]);
 
   useInterval(
     () => {
       void refreshRecentRequests().catch(() => {});
     },
-    enabled ? PROVIDER_RECENT_REQUESTS_STALE_TIME_MS : null
+    polling ? PROVIDER_RECENT_REQUESTS_STALE_TIME_MS : null
   );
 
   const usageByProvider =

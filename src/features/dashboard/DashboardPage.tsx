@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import {
@@ -9,6 +9,8 @@ import {
   IconSidebarQuota,
   IconSidebarSystem,
 } from '@/components/ui/icons';
+import { Button } from '@/components/ui/Button';
+import { Skeleton } from '@/components/ui/Skeleton';
 import { useAuthStore } from '@/stores';
 import { useHeaderRefresh } from '@/hooks/useHeaderRefresh';
 import { formatCompactNumber, formatDateValue, formatPercent } from '@/utils/format';
@@ -17,8 +19,19 @@ import { LiveWire } from './components/LiveWire';
 import { Meter } from './components/Meter';
 import { Sparkline } from './components/Sparkline';
 import { ThroughputChart } from './components/ThroughputChart';
+import { CostHistogram } from './components/CostHistogram';
+import { CostBreakdown } from './components/CostBreakdown';
+import { UsageRangeSwitch } from './components/UsageRangeSwitch';
+import { useUsageStats } from './hooks/useUsageStats';
 import { useCountUp, useRevealGroup, useRevealOnScroll } from '@/hooks/motion';
 import { providerLabel, splitWindowMinutes, toneForSuccessRate, type MeterTone } from './utils';
+import {
+  buildCostRows,
+  buildCostSeries,
+  DEFAULT_USAGE_RANGE,
+  seriesGranularity,
+  type UsageRangeKey,
+} from './usage';
 import styles from './dashboard.module.scss';
 
 const DASH = '—';
@@ -35,6 +48,10 @@ const TILE_ACCENTS: Record<MeterTone, string> = {
 const formatHeadline = (value: number): string =>
   value < 100_000 ? value.toLocaleString() : formatCompactNumber(value);
 
+/* 用量区加载占位：柱高与条宽都取不等值，否则一眼就看出是假数据。 */
+const CHART_SKELETON_HEIGHTS = [58, 76, 44, 88, 62, 96, 51, 71, 83, 47, 67, 92];
+const ROW_SKELETON_WIDTHS = ['86%', '74%', '63%', '52%', '44%', '35%'];
+
 export function DashboardPage() {
   const { t, i18n } = useTranslation();
   const serverVersion = useAuthStore((state) => state.serverVersion);
@@ -48,6 +65,7 @@ export function DashboardPage() {
   /* Hero 与静态网格走分组级联；异步内容区（图表/供应商）保持整块 reveal */
   const heroRef = useRevealGroup<HTMLElement>();
   const statsRef = useRevealGroup<HTMLElement>(0.12);
+  const usageRef = useRevealOnScroll<HTMLElement>();
   const trafficRef = useRevealOnScroll<HTMLElement>();
   const fleetRef = useRevealOnScroll<HTMLElement>();
   const detailRef = useRevealGroup<HTMLElement>();
@@ -81,6 +99,37 @@ export function DashboardPage() {
 
   const unknownProviderLabel = t('dashboard.provider_unknown');
   const successRateTone = toneForSuccessRate(traffic.successRate);
+
+  /* ---------- 用量与估算消费 ---------- */
+  const [usageRange, setUsageRange] = useState<UsageRangeKey>(DEFAULT_USAGE_RANGE);
+  const {
+    report: usageReport,
+    loading: usageLoading,
+    error: usageError,
+    errorStatus: usageErrorStatus,
+    connected: usageConnected,
+    reload: usageReload,
+  } = useUsageStats(usageRange);
+
+  const usageCurrency = usageReport?.currency || 'USD';
+  const usageGranularity = seriesGranularity(usageReport);
+  const costSeries = useMemo(
+    () => buildCostSeries(usageReport, i18n.language),
+    [usageReport, i18n.language]
+  );
+  const modelCostRows = useMemo(
+    () => buildCostRows(usageReport, 'models', unknownProviderLabel),
+    [usageReport, unknownProviderLabel]
+  );
+  const providerCostRows = useMemo(
+    () => buildCostRows(usageReport, 'providers', unknownProviderLabel),
+    [usageReport, unknownProviderLabel]
+  );
+  /* 旧版后端没有这个路由，单独给出可操作的提示而不是 axios 原文 */
+  const usageErrorText =
+    usageErrorStatus === 404 ? t('dashboard.usage_error_unsupported') : usageError;
+  /* 切范围时保留旧图并标记“更新中”，不要整块回落到加载态 */
+  const usageRefreshing = usageLoading && usageReport !== null;
 
   /** 标题是算出来的判词，不是写死的口号；句尾句号充当状态灯 */
   const verdict = useMemo(() => {
@@ -223,11 +272,6 @@ export function DashboardPage() {
 
   return (
     <div className={styles.page}>
-      <div className={styles.ambient} aria-hidden="true">
-        <span className={styles.washTop} />
-        <span className={styles.gridWash} />
-      </div>
-
       {/* ---------- Hero ---------- */}
       <section className={styles.hero} ref={heroRef}>
         <div className={styles.heroCopy}>
@@ -336,6 +380,89 @@ export function DashboardPage() {
             <span className={styles.statHint}>{tile.hint}</span>
           </article>
         ))}
+      </section>
+
+      {/* ---------- 用量与估算消费 ---------- */}
+      <section className={styles.section} ref={usageRef}>
+        <header className={styles.usageHead}>
+          <div className={styles.sectionHead}>
+            <span className={styles.eyebrow}>{t('dashboard.usage_eyebrow')}</span>
+            <h2 className={styles.sectionTitle}>{t('dashboard.usage_title')}</h2>
+            <p className={styles.sectionDescription}>{t('dashboard.usage_description')}</p>
+          </div>
+          <div className={styles.usageControls}>
+            {usageRefreshing && (
+              <span className={styles.refreshHint} role="status">
+                {t('dashboard.usage_refreshing')}
+              </span>
+            )}
+            <UsageRangeSwitch
+              value={usageRange}
+              disabled={!usageConnected}
+              onChange={setUsageRange}
+            />
+          </div>
+        </header>
+
+        {usageErrorText ? (
+          <div className={styles.panel}>
+            <div className={styles.usageError} role="alert">
+              <p className={styles.usageErrorText}>{usageErrorText}</p>
+              <Button variant="secondary" size="sm" onClick={() => void usageReload()}>
+                {t('dashboard.usage_retry')}
+              </Button>
+            </div>
+          </div>
+        ) : usageLoading && !usageReport ? (
+          <div className={styles.usageSkeleton} role="status">
+            <span className={styles.srOnly}>{t('dashboard.usage_loading')}</span>
+            <div className={styles.panel}>
+              <div className={styles.skeletonChart} aria-hidden="true">
+                {CHART_SKELETON_HEIGHTS.map((height, index) => (
+                  <Skeleton key={index} className={styles.skeletonChartBar} height={height} />
+                ))}
+              </div>
+            </div>
+            <div className={styles.usageSplit} aria-hidden="true">
+              {[0, 1].map((panel) => (
+                <div key={panel} className={styles.panel}>
+                  {ROW_SKELETON_WIDTHS.map((width, index) => (
+                    <Skeleton key={index} width={width} height={14} />
+                  ))}
+                </div>
+              ))}
+            </div>
+          </div>
+        ) : (
+          <div
+            className={[styles.usageBody, usageRefreshing ? styles.refreshing : '']
+              .filter(Boolean)
+              .join(' ')}
+            aria-busy={usageRefreshing || undefined}
+          >
+            <div className={styles.panel}>
+              <CostHistogram
+                series={costSeries}
+                currency={usageCurrency}
+                granularity={usageGranularity}
+              />
+            </div>
+            <div className={styles.usageSplit}>
+              <CostBreakdown
+                title={t('dashboard.usage_models_title')}
+                rows={modelCostRows}
+                currency={usageCurrency}
+                emptyLabel={t('dashboard.usage_breakdown_empty')}
+              />
+              <CostBreakdown
+                title={t('dashboard.usage_providers_title')}
+                rows={providerCostRows}
+                currency={usageCurrency}
+                emptyLabel={t('dashboard.usage_breakdown_empty')}
+              />
+            </div>
+          </div>
+        )}
       </section>
 
       {/* ---------- Traffic ---------- */}

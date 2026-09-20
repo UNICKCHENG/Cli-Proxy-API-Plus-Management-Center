@@ -10,9 +10,9 @@
   flex-direction: column;
   align-items: center;
   gap: 8px;
-  padding: $spacing-sm 0 $spacing-md;
+  padding: 10px 0 12px;
   text-align: center;
-  border-bottom: 1px solid var(--border-color);
+  border-bottom: 1px solid var(--hairline);
 }
 
 .logoBox {
@@ -22,10 +22,10 @@
   align-items: center;
   justify-content: center;
   overflow: hidden;
-  border-radius: 12px;
-  border: 1px solid color-mix(in srgb, var(--border-color) 50%, transparent);
-  background: color-mix(in srgb, var(--bg-tertiary) 60%, transparent);
-  color: var(--text-secondary);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--hairline);
+  background: var(--bg-tertiary);
+  color: var(--text-tertiary);
 
   img {
     width: 100%;
@@ -36,8 +36,9 @@
 
 .name {
   margin: 0;
-  font-size: 20px;
-  font-weight: 700;
+  font-size: 19px;
+  font-weight: 640;
+  letter-spacing: -0.02em;
   color: var(--text-primary);
   overflow-wrap: anywhere;
 }
@@ -45,8 +46,8 @@
 .slug {
   margin: 0;
   font-family: $font-mono;
-  font-size: 13px;
-  color: var(--text-secondary);
+  font-size: 12.5px;
+  color: var(--text-tertiary);
   overflow-wrap: anywhere;
 }
 
@@ -57,8 +58,8 @@
   gap: 4px;
   margin: 0;
   font-family: $font-mono;
-  font-size: 13px;
-  color: var(--text-secondary);
+  font-size: 12.5px;
+  color: var(--text-tertiary);
   text-decoration: none;
 
   span {
@@ -68,7 +69,7 @@
 
   svg {
     flex-shrink: 0;
-    color: var(--text-tertiary);
+    color: var(--text-quaternary);
   }
 
   &:hover {
@@ -90,7 +91,7 @@
 .source {
   margin: 0;
   font-size: 12px;
-  color: var(--text-tertiary);
+  color: var(--text-quaternary);
   overflow-wrap: anywhere;
 }
 
@@ -98,27 +99,27 @@
 .warningBanner {
   display: flex;
   align-items: center;
-  gap: $spacing-sm;
-  margin-top: $spacing-lg;
+  gap: 10px;
+  margin-top: 20px;
   padding: 12px 14px;
-  border-radius: $radius-md;
-  border: 1px solid color-mix(in srgb, var(--quota-medium-color, #e0aa14) 45%, var(--border-color));
-  background: color-mix(in srgb, var(--quota-medium-color, #e0aa14) 16%, var(--bg-secondary));
+  border-radius: var(--radius-md);
+  border: 1px solid var(--amber-30);
+  background: var(--amber-10);
   color: var(--text-primary);
-  font-weight: 600;
-  font-size: 14px;
-  line-height: 1.4;
+  font-weight: 560;
+  font-size: 13px;
+  line-height: 1.45;
 
   svg {
     flex-shrink: 0;
-    color: var(--quota-medium-color, #e0aa14);
+    color: var(--amber-color);
   }
 }
 
 .effects {
-  margin: $spacing-md 0 0;
-  padding-left: $spacing-md;
-  border-left: 2px solid var(--border-color);
+  margin: 12px 0 0;
+  padding-left: 12px;
+  border-left: 1px solid var(--hairline);
   list-style: none;
   display: flex;
   flex-direction: column;
@@ -127,7 +128,7 @@
   li {
     position: relative;
     padding-left: 18px;
-    font-size: 14px;
+    font-size: 13px;
     line-height: 1.5;
     color: var(--text-secondary);
 
@@ -136,28 +137,28 @@
       position: absolute;
       left: 0;
       top: 7px;
-      width: 7px;
-      height: 7px;
+      width: 6px;
+      height: 6px;
       border-radius: 50%;
-      background: var(--text-tertiary);
+      background: var(--text-quaternary);
     }
   }
 }
 
 .untrustedAlert {
-  margin-top: $spacing-lg;
+  margin-top: 20px;
   padding: 12px 14px;
-  border-radius: $radius-md;
-  border: 1px solid rgba($warning-color, 0.35);
-  background: rgba($warning-color, 0.1);
+  border-radius: var(--radius-md);
+  border: 1px solid color-mix(in srgb, var(--error-color) 32%, transparent);
+  background: color-mix(in srgb, var(--error-color) 10%, transparent);
 }
 
 .untrustedText {
   margin: 0;
-  font-size: 13.5px;
+  font-size: 13px;
   line-height: 1.5;
-  font-weight: 600;
-  color: var(--danger-color);
+  font-weight: 560;
+  color: var(--error-color);
 }
 
 .originGrid {
@@ -168,8 +169,8 @@
 
   dt {
     font-size: 12px;
-    font-weight: 600;
-    color: var(--text-secondary);
+    font-weight: 560;
+    color: var(--text-tertiary);
   }
 
   dd {
@@ -183,21 +184,21 @@
 
 // ── Step 3: type-to-confirm ──
 .confirmBlock {
-  margin-top: $spacing-lg;
+  margin-top: 20px;
 }
 
 .confirmPrompt {
   display: block;
-  margin-bottom: $spacing-sm;
-  font-size: 14px;
-  font-weight: 600;
+  margin-bottom: 10px;
+  font-size: 13px;
+  font-weight: 560;
   color: var(--text-primary);
   line-height: 1.5;
   overflow-wrap: anywhere;
 }
 
 .confirmHint {
-  margin: $spacing-sm 0 0;
+  margin: 10px 0 0;
   font-size: 12px;
-  color: var(--text-tertiary);
+  color: var(--text-quaternary);
 }

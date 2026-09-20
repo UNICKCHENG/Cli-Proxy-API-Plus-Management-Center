@@ -1,0 +1,72 @@
+@use '../../../styles/mixins' as *;
+
+/* 用量窗口分段控件：与配置页 ModeSwitch 同语汇，仅尺寸更紧凑 */
+
+.segmented {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  padding: 3px;
+  border-radius: $radius-full;
+  border: 1px solid transparent;
+  background: color-mix(in srgb, var(--text-primary) 6%, transparent);
+  flex-shrink: 0;
+}
+
+.segment {
+  border: 0;
+  background: none;
+  cursor: pointer;
+  padding: 4px 12px;
+  border-radius: $radius-full;
+  font-size: 12px;
+  font-weight: 540;
+  line-height: 1.3;
+  color: var(--text-secondary);
+  white-space: nowrap;
+  transition:
+    color $transition-fast,
+    background-color $transition-fast,
+    box-shadow $transition-fast,
+    transform var(--dur-press) var(--ease-out-strong);
+
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.55;
+  }
+
+  &:active:not(:disabled) {
+    transform: scale(0.96);
+  }
+
+  &:focus-visible {
+    @include focus-ring(-1px);
+  }
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .segment:hover:not(:disabled):not(.segmentActive) {
+    color: var(--text-primary);
+  }
+}
+
+.segmentActive {
+  color: var(--text-primary);
+  font-weight: 620;
+  background: var(--bg-primary);
+  box-shadow: $shadow-sm;
+
+  &:disabled {
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .segment {
+    transition: none;
+  }
+
+  .segment:active:not(:disabled) {
+    transform: none;
+  }
+}

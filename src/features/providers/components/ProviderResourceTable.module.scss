@@ -13,12 +13,12 @@
 .primaryCell {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 3px;
   min-width: 0;
 }
 
 .primaryName {
-  font-weight: 500;
+  font-weight: 560;
   color: var(--text-primary);
   overflow: hidden;
   text-overflow: ellipsis;
@@ -27,8 +27,8 @@
 }
 
 .primarySub {
-  font-size: 12px;
-  color: var(--muted-foreground);
+  font-size: 11px;
+  color: var(--text-quaternary);
   font-family: $font-mono;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -42,8 +42,8 @@
   min-width: 0;
   max-width: 100%;
   font-family: $font-mono;
-  font-size: 12px;
-  color: var(--muted-foreground);
+  font-size: 11px;
+  color: var(--text-quaternary);
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -52,18 +52,19 @@
 .chip {
   display: inline-flex;
   align-items: center;
-  padding: 3px 9px;
-  border-radius: var(--radius-md);
-  border: 1px solid var(--border-color);
-  background: var(--muted-bg);
-  color: var(--muted-foreground);
-  font-size: 12px;
+  padding: 2px 8px;
+  border-radius: var(--radius-full);
+  border: 1px solid var(--hairline);
+  background: var(--bg-tertiary);
+  color: var(--text-tertiary);
+  font-size: 11px;
+  font-weight: 540;
 }
 
 .metricsCell {
   display: flex;
   flex-wrap: wrap;
-  gap: 6px;
+  gap: 5px;
   align-items: center;
 }
 
@@ -71,35 +72,35 @@
   display: inline-flex;
   align-items: center;
   gap: 4px;
-  padding: 3px 9px;
-  border-radius: var(--radius-md);
-  border: 1px solid var(--border-color);
-  background: var(--muted-bg);
-  font-size: 12px;
+  padding: 2px 8px;
+  border-radius: var(--radius-full);
+  border: 1px solid var(--hairline);
+  background: var(--bg-tertiary);
+  font-size: 11px;
   line-height: 1.4;
   white-space: nowrap;
 }
 
 .metricLabel {
-  color: var(--muted-foreground);
+  color: var(--text-quaternary);
 }
 
 .metricValue {
   color: var(--text-primary);
-  font-weight: 600;
+  font-weight: 580;
   font-variant-numeric: tabular-nums;
 }
 
 .flagTag {
   display: inline-flex;
   align-items: center;
-  padding: 3px 9px;
-  border-radius: var(--radius-md);
-  border: 1px solid var(--primary-30);
-  background: var(--primary-10);
-  color: var(--primary-color);
-  font-size: 12px;
-  font-weight: 500;
+  padding: 2px 8px;
+  border-radius: var(--radius-full);
+  border: 1px solid color-mix(in srgb, var(--primary-color) 26%, transparent);
+  background: color-mix(in srgb, var(--primary-color) 11%, transparent);
+  color: var(--primary-active);
+  font-size: 11px;
+  font-weight: 540;
   line-height: 1.4;
   white-space: nowrap;
 }
@@ -108,11 +109,11 @@
   display: inline-flex;
   align-items: center;
   gap: 4px;
-  padding: 3px 9px;
-  border-radius: var(--radius-md);
+  padding: 2px 8px;
+  border-radius: var(--radius-full);
   border: 1px solid;
-  font-size: 12px;
-  font-weight: 500;
+  font-size: 11px;
+  font-weight: 540;
   white-space: nowrap;
 }
 
@@ -137,9 +138,9 @@
   align-items: center;
   gap: 4px;
   padding: 2px 7px;
-  border-radius: 999px;
-  font-size: 12px;
-  font-weight: 600;
+  border-radius: $radius-full;
+  font-size: 11px;
+  font-weight: 580;
   line-height: 1.4;
   border: 1px solid transparent;
   white-space: nowrap;
@@ -181,12 +182,12 @@
   right: 0;
   width: 176px;
   min-width: 176px;
-  box-shadow: -12px 0 16px -18px rgba(15, 23, 42, 0.45);
+  box-shadow: -12px 0 16px -18px color-mix(in srgb, var(--text-primary) 45%, transparent);
 }
 
 .actionsHead {
   z-index: 3;
-  background: var(--muted-bg);
+  background: var(--bg-quinary);
 }
 
 .actionsCell {
@@ -195,7 +196,7 @@
 }
 
 .actionsCellSelected {
-  background: var(--primary-8);
+  background: color-mix(in srgb, var(--primary-color) 8%, var(--bg-primary));
 }
 
 .actions {
@@ -216,13 +217,13 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 30px;
-  height: 30px;
+  width: var(--control-h-sm);
+  height: var(--control-h-sm);
   padding: 0;
   border: 1px solid transparent;
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-sm);
   background: transparent;
-  color: var(--text-secondary);
+  color: var(--text-tertiary);
   cursor: pointer;
   transition:
     background-color $transition-fast,
@@ -239,8 +240,7 @@
   }
 
   &:focus-visible {
-    outline: 2px solid var(--primary-color);
-    outline-offset: -1px;
+    @include focus-ring(-1px);
   }
 }
 

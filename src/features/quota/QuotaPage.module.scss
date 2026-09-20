@@ -7,7 +7,7 @@
 .page {
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 18px;
   width: 100%;
   min-width: 0;
 }
@@ -54,10 +54,10 @@
 .errorBanner {
   font-size: 12.5px;
   line-height: 1.5;
-  color: var(--danger-color);
-  background: var(--bg-error-light);
-  border: 1px solid var(--warning-border);
-  border-radius: 10px;
+  color: var(--error-color);
+  background: color-mix(in srgb, var(--error-color) 9%, transparent);
+  border: 1px solid color-mix(in srgb, var(--error-color) 26%, transparent);
+  border-radius: var(--radius-md);
   padding: 9px 12px;
   overflow-wrap: anywhere;
 }
@@ -68,7 +68,7 @@
 
 .grid {
   display: grid;
-  gap: 16px;
+  gap: 14px;
   grid-template-columns: repeat(auto-fill, minmax(min(100%, 340px), 1fr));
   align-items: stretch;
 }

@@ -9,6 +9,11 @@ const retiredEndpoints = [
   ['infistar', 'https://infistar.ai'],
   ['claudeApi', 'https://gw.apito.ai'],
   ['claudeApi', 'https://gw.claudeapi.com'],
+  ['apikeyFun', 'https://api.apikey.fan'],
+  ['apikeyFun', 'https://slb.apikey.fan'],
+  ['fennoAI', 'https://api.fenno.ai'],
+  ['qiniuCloud', 'https://api.qnaigc.com'],
+  ['qiniuCloud', 'https://api.modelink.ai'],
 ] as const;
 
 describe('removed quick-access providers', () => {
@@ -17,9 +22,7 @@ describe('removed quick-access providers', () => {
     for (const [brand] of retiredEndpoints) {
       expect(ids).not.toContain(brand);
     }
-    for (const brand of ['apikeyFun', 'fennoAI', 'qiniuCloud', 'kimi']) {
-      expect(ids).toContain(brand);
-    }
+    expect(ids).toContain('kimi');
   });
 
   for (const [name, baseUrl] of retiredEndpoints) {

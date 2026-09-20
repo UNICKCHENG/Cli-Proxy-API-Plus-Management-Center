@@ -1,18 +1,19 @@
+@use '../styles/mixins' as *;
+
 .container {
   width: 100%;
 }
 
 .pageTitle {
-  font-size: 28px;
-  font-weight: 700;
-  color: var(--text-primary);
-  margin: 0 0 $spacing-xl 0;
+  @include page-title(21px);
+
+  margin: 0 0 18px;
 }
 
 .content {
   display: flex;
   flex-direction: column;
-  gap: $spacing-xl;
+  gap: 22px;
 }
 
 .aboutCard {
@@ -25,25 +26,26 @@
   align-items: center;
   justify-content: center;
   width: 100%;
-  gap: $spacing-md;
-  padding: $spacing-lg 0 $spacing-xl;
+  gap: 12px;
+  padding: 14px 0 22px;
 }
 
 .aboutLogo {
-  width: 108px;
-  height: 108px;
-  border-radius: 26px;
+  width: 88px;
+  height: 88px;
+  border-radius: var(--radius-2xl);
   object-fit: cover;
-  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.16);
+  box-shadow: var(--window-shadow);
 }
 
 .aboutTitle {
   width: min(100%, 920px);
-  font-size: clamp(28px, 4.2vw, 44px);
-  font-weight: 800;
-  line-height: 1.12;
+  font-family: $font-display;
+  font-size: clamp(20px, 2.4vw, 28px);
+  font-weight: 660;
+  line-height: 1.2;
   color: var(--text-primary);
-  letter-spacing: -0.02em;
+  letter-spacing: -0.018em;
   text-align: center;
   text-wrap: balance;
   white-space: normal;
@@ -53,7 +55,7 @@
 .aboutInfoGrid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: $spacing-md;
+  gap: 12px;
 
   @media (max-width: 900px) {
     grid-template-columns: 1fr;
@@ -63,40 +65,40 @@
 .infoTile {
   display: flex;
   flex-direction: column;
-  gap: 6px;
-  min-height: 120px;
-  padding: $spacing-md $spacing-lg;
-  border-radius: $radius-lg;
-  border: 1px solid var(--border-color);
-  background: color-mix(in srgb, var(--bg-secondary) 82%, transparent);
+  gap: 4px;
+  min-height: 104px;
+  padding: 14px 16px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--hairline);
+  background: var(--bg-tertiary);
   text-align: left;
 }
 
 .tapTile {
-  border: 1px solid var(--border-color);
-  background: color-mix(in srgb, var(--bg-secondary) 82%, transparent);
+  border: 1px solid var(--hairline);
+  background: var(--bg-tertiary);
   color: inherit;
-  padding: $spacing-md $spacing-lg;
+  padding: 14px 16px;
   cursor: pointer;
   transition:
-    transform 0.18s ease,
-    border-color 0.2s ease,
-    box-shadow 0.2s ease;
+    transform var(--dur-hover) var(--ease-out-strong),
+    border-color $transition-fast,
+    box-shadow $transition-fast;
 
   &:hover {
     transform: translateY(-1px);
-    border-color: var(--primary-color);
-    box-shadow: 0 8px 18px rgba($primary-color, 0.18);
+    border-color: var(--border-hover);
+    box-shadow: $shadow-md;
   }
 
   &:active {
-    transform: translateY(0);
+    transform: none;
   }
 }
 
 .tileLabel {
-  font-size: 13px;
-  font-weight: 600;
+  font-size: 11.5px;
+  font-weight: 560;
   color: var(--text-secondary);
 }
 
@@ -105,7 +107,7 @@
   align-items: flex-start;
   justify-content: space-between;
   gap: $spacing-sm;
-  min-height: 40px;
+  min-height: 36px;
 }
 
 .tileAction {
@@ -115,36 +117,37 @@
 }
 
 .tileValue {
-  font-size: 22px;
-  font-weight: 700;
+  font-family: $font-display;
+  font-size: 19px;
+  font-weight: 660;
   color: var(--text-primary);
   line-height: 1.25;
-  word-break: break-word;
+  overflow-wrap: anywhere;
 }
 
 .tileSub {
-  font-size: 12px;
-  color: var(--text-tertiary);
-  line-height: 1.4;
+  font-size: 11.5px;
+  color: var(--text-quaternary);
+  line-height: 1.45;
 }
 
 .section {
   display: flex;
   flex-direction: column;
-  gap: $spacing-md;
+  gap: 12px;
 }
 
 .sectionTitle {
-  font-size: 20px;
-  font-weight: 600;
+  margin: 0 0 10px;
+  font-size: 15px;
+  font-weight: 620;
   color: var(--text-primary);
-  margin: 0 0 $spacing-md 0;
 }
 
 .sectionDescription {
-  font-size: 14px;
+  margin: 0 0 10px;
+  font-size: 12.5px;
   color: var(--text-secondary);
-  margin: 0 0 $spacing-md 0;
 }
 
 .clearLoginActions {
@@ -155,23 +158,24 @@
 
 .infoGrid {
   display: grid;
-  gap: $spacing-sm;
+  gap: 6px;
 
   .infoRow {
     display: flex;
     justify-content: space-between;
-    padding: $spacing-sm $spacing-md;
-    background-color: var(--bg-secondary);
-    border-radius: $radius-md;
+    gap: 12px;
+    padding: 9px 12px;
+    background-color: var(--bg-tertiary);
+    border-radius: var(--radius-sm);
 
     .label {
-      font-weight: 500;
+      font-weight: 520;
       color: var(--text-secondary);
     }
 
     .value {
       color: var(--text-primary);
-      font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+      font-family: $font-mono;
     }
   }
 }
@@ -179,17 +183,17 @@
 .modelsList {
   display: flex;
   flex-direction: column;
-  gap: $spacing-sm;
+  gap: 4px;
   max-height: 400px;
   overflow-y: auto;
 }
 
 .modelItem {
-  padding: $spacing-sm $spacing-md;
-  background-color: var(--bg-secondary);
-  border-radius: $radius-md;
-  font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
-  font-size: 13px;
+  padding: 9px 12px;
+  background-color: var(--bg-tertiary);
+  border-radius: var(--radius-sm);
+  font-family: $font-mono;
+  font-size: 12.5px;
 
   &:hover {
     background-color: var(--bg-hover);
@@ -218,53 +222,52 @@
 .modelTag {
   display: inline-flex;
   align-items: center;
-  gap: $spacing-xs;
-  padding: 4px 10px;
+  gap: 4px;
+  padding: 3px 9px;
   border-radius: $radius-full;
-  border: 1px solid var(--border-color);
-  background-color: var(--bg-secondary);
-  font-family:
-    ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New',
-    monospace;
+  border: 1px solid var(--hairline);
+  background-color: var(--bg-tertiary);
+  font-family: $font-mono;
+  font-size: 11.5px;
 }
 
 .modelName {
   color: var(--text-primary);
-  font-weight: 600;
+  font-weight: 580;
 }
 
 .modelAlias {
-  color: var(--text-secondary);
-  font-size: 12px;
+  color: var(--text-tertiary);
+  font-size: 11.5px;
 }
 
 .versionCheck {
   display: flex;
   flex-direction: column;
-  gap: $spacing-md;
+  gap: 12px;
 }
 
 .versionInfo {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: $spacing-md;
+  gap: 12px;
 
   .versionItem {
-    padding: $spacing-md;
-    background-color: var(--bg-secondary);
-    border-radius: $radius-md;
+    padding: 12px 14px;
+    background-color: var(--bg-tertiary);
+    border-radius: var(--radius-md);
 
     .label {
-      font-size: 12px;
+      margin-bottom: 4px;
+      font-size: 11.5px;
       color: var(--text-secondary);
-      margin-bottom: $spacing-xs;
     }
 
     .version {
-      font-size: 16px;
-      font-weight: 600;
+      font-family: $font-mono;
+      font-size: 14px;
+      font-weight: 580;
       color: var(--text-primary);
-      font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
     }
   }
 }
@@ -272,30 +275,33 @@
 .quickLinks {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: $spacing-md;
+  gap: 12px;
 }
 
 .linkCard {
   display: flex;
   align-items: center;
-  gap: $spacing-md;
-  padding: $spacing-md $spacing-lg;
-  background-color: var(--bg-secondary);
-  border: 1px solid var(--border-color);
-  border-radius: $radius-lg;
+  gap: 12px;
+  padding: 14px 16px;
+  background-color: var(--bg-primary);
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius-lg);
+  box-shadow: $shadow-sm;
   text-decoration: none;
   color: inherit;
-  transition: all 0.2s ease;
+  transition:
+    transform var(--dur-hover) var(--ease-out-strong),
+    border-color $transition-fast,
+    box-shadow $transition-fast;
 
   &:hover {
-    background-color: var(--bg-hover);
-    border-color: var(--primary-color);
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    border-color: var(--border-hover);
+    transform: translateY(-1px);
+    box-shadow: $shadow-md;
   }
 
   &:active {
-    transform: translateY(0);
+    transform: none;
   }
 }
 
@@ -303,9 +309,9 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 44px;
-  height: 44px;
-  border-radius: $radius-md;
+  width: 38px;
+  height: 38px;
+  border-radius: var(--radius-md);
   background-color: #24292f;
   color: white;
   flex-shrink: 0;
@@ -324,11 +330,11 @@
 .linkTitle {
   display: flex;
   align-items: center;
-  gap: $spacing-xs;
-  font-size: 15px;
+  gap: 4px;
+  margin-bottom: 1px;
+  font-size: 13.5px;
   font-weight: 600;
   color: var(--text-primary);
-  margin-bottom: 2px;
 
   svg {
     opacity: 0.5;
@@ -337,7 +343,7 @@
 }
 
 .linkDesc {
-  font-size: 13px;
+  font-size: 12px;
   color: var(--text-secondary);
   white-space: nowrap;
   overflow: hidden;
@@ -346,26 +352,26 @@
 
 @media (max-width: 768px) {
   .aboutLogo {
-    width: 92px;
-    height: 92px;
-    border-radius: 22px;
+    width: 76px;
+    height: 76px;
+    border-radius: var(--radius-xl);
   }
 
   .aboutTitle {
     width: min(100%, 24ch);
-    font-size: clamp(22px, 6.6vw, 34px);
-    font-weight: 700;
-    line-height: 1.18;
-    letter-spacing: -0.012em;
+    font-size: clamp(19px, 5.4vw, 26px);
+    font-weight: 640;
+    line-height: 1.22;
+    letter-spacing: -0.014em;
   }
 }
 
 @media (max-width: 520px) {
   .aboutTitle {
     width: min(100%, 19ch);
-    font-size: clamp(20px, 7.2vw, 28px);
-    font-weight: 600;
-    line-height: 1.22;
-    letter-spacing: -0.006em;
+    font-size: clamp(18px, 5.6vw, 22px);
+    font-weight: 620;
+    line-height: 1.24;
+    letter-spacing: -0.01em;
   }
 }

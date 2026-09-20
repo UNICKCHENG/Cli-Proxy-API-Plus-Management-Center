@@ -8,61 +8,16 @@
   margin: 0 auto;
   display: flex;
   flex-direction: column;
-  gap: clamp(44px, 6.5vh, 76px);
+  gap: clamp(32px, 4.5vh, 52px);
 }
 
-/* ---------- 环境层（ambient）---------- */
+/* ---------- 环境层 ---------- */
 
 /*
- * 页面被 .page-transition（overflow: hidden）裁切，环境层绝不能伸出页面顶端，
- * 否则会在容器上缘被硬切出一条分界线。因此这里不做越界定位：
- * 强度用 mask 从顶端 0 平滑升起，任何祖先在哪裁切都只会切到零强度区。
+ * 仪表盘原本在背景上叠两层装饰：一道绿色顶部 wash + 一层 72px 网格，
+ * 两者都是用 gradient 画的，全仓移除渐变后一并去掉。
+ * 层次改由各区块自身的 pane()/material() 材料与发丝描边表达。
  */
-.ambient {
-  position: absolute;
-  inset: 0 -40px auto;
-  height: 560px;
-  z-index: 0;
-  overflow: hidden;
-  pointer-events: none;
-}
-
-/* 环境层收敛为一道极淡的顶部绿色 wash：绿色只属于"活着的流量"。
- * radial-gradient 本身就是连续的，不需要 blur（blur 的溢出反而会被裁出硬边）。 */
-.washTop {
-  position: absolute;
-  top: 0;
-  left: 50%;
-  width: min(960px, 96vw);
-  height: 480px;
-  transform: translateX(-50%);
-  background: radial-gradient(
-    ellipse 75% 70% at 50% 18%,
-    color-mix(in srgb, var(--viz-success) 10%, transparent),
-    transparent 70%
-  );
-  mask-image: linear-gradient(to bottom, transparent, #000 26%, #000 62%, transparent);
-  -webkit-mask-image: linear-gradient(to bottom, transparent, #000 26%, #000 62%, transparent);
-}
-
-.gridWash {
-  position: absolute;
-  inset: 0;
-  background-image:
-    linear-gradient(to right, var(--border-color) 1px, transparent 1px),
-    linear-gradient(to bottom, var(--border-color) 1px, transparent 1px);
-  background-size: 72px 72px;
-  opacity: 0.24;
-  /* 同样从顶端 0 淡入（intersect 取两层交集），避免网格在裁切线处满强度起步 */
-  mask-image:
-    linear-gradient(to bottom, transparent, #000 48px),
-    radial-gradient(ellipse 70% 60% at 50% 0%, #000 0%, transparent 78%);
-  -webkit-mask-image:
-    linear-gradient(to bottom, transparent, #000 48px),
-    radial-gradient(ellipse 70% 60% at 50% 0%, #000 0%, transparent 78%);
-  mask-composite: intersect;
-  -webkit-mask-composite: source-in;
-}
 
 /* ---------- Hero ---------- */
 
@@ -73,9 +28,9 @@
   grid-template-columns: minmax(0, 1.15fr) minmax(300px, 0.85fr);
   gap: clamp($spacing-lg, 4vw, 56px);
   align-items: center;
-  padding-top: clamp($spacing-md, 3vh, 40px);
+  padding-top: clamp($spacing-md, 2vh, 28px);
   /* 底部留出脉搏线的呼吸空间 */
-  padding-bottom: clamp(64px, 11vh, 120px);
+  padding-bottom: clamp(48px, 8vh, 84px);
 
   @media (max-width: 900px) {
     grid-template-columns: minmax(0, 1fr);
@@ -107,10 +62,11 @@
 /* 判词标题：文案来自实时状态，短，所以敢放大 */
 .heroTitle {
   margin: 0;
-  font-size: clamp(44px, 6.2vw, 80px);
-  line-height: 1.05;
+  font-family: $font-display;
+  font-size: clamp(36px, 4.6vw, 58px);
+  line-height: 1.06;
   font-weight: 700;
-  letter-spacing: -0.035em;
+  letter-spacing: -0.032em;
   color: var(--text-primary);
   text-wrap: balance;
 }
@@ -246,14 +202,11 @@
   display: flex;
   flex-direction: column;
   gap: $spacing-xs;
-  padding: clamp($spacing-lg, 2.5vw, 28px);
-  border-radius: 20px;
+  padding: clamp($spacing-lg, 2.5vw, 26px);
+  border-radius: var(--radius-xl);
   border: 1px solid var(--glass-border);
-  background: linear-gradient(
-    145deg,
-    color-mix(in srgb, var(--bg-primary) 90%, transparent),
-    color-mix(in srgb, var(--bg-secondary) 74%, transparent)
-  );
+  /* 原来是 145deg 的两段渐变，取两端中间的一档平铺（半透明底 + 背景模糊依旧） */
+  background: color-mix(in srgb, var(--bg-primary) 88%, transparent);
   backdrop-filter: var(--glass-backdrop-filter);
   -webkit-backdrop-filter: var(--glass-backdrop-filter);
   box-shadow: var(--shadow-lg);
@@ -269,10 +222,10 @@
 .heroPanelLabel {
   font-family: $font-mono;
   font-size: 11px;
-  font-weight: 700;
+  font-weight: 620;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: var(--text-tertiary);
+  color: var(--text-quaternary);
 }
 
 .liveBadge {
@@ -285,7 +238,7 @@
   background: color-mix(in srgb, var(--viz-success) 8%, transparent);
   font-family: $font-mono;
   font-size: 10px;
-  font-weight: 700;
+  font-weight: 620;
   letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--success-badge-text);
@@ -339,7 +292,7 @@
   flex-wrap: wrap;
   gap: $spacing-md;
   padding-top: $spacing-sm;
-  border-top: 1px solid var(--border-color);
+  border-top: 1px solid var(--hairline);
   font-size: 12px;
   color: var(--text-secondary);
 }
@@ -393,11 +346,14 @@
   display: flex;
   flex-direction: column;
   gap: 6px;
-  padding: $spacing-lg;
-  border-radius: 14px;
-  border: 1px solid var(--border-color);
-  background: color-mix(in srgb, var(--bg-primary) 82%, transparent);
-  transition: border-color $transition-fast;
+  padding: 18px;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--hairline);
+  background: var(--bg-primary);
+  box-shadow: $shadow-sm;
+  transition:
+    border-color $transition-fast,
+    box-shadow $transition-fast;
 
   /* 左上角色签：语义色调由 --tile-accent 注入 */
   &::before {
@@ -413,6 +369,7 @@
   @media (hover: hover) and (pointer: fine) {
     &:hover {
       border-color: var(--border-hover);
+      box-shadow: $shadow-md;
     }
   }
 
@@ -422,17 +379,18 @@
 }
 
 .statLabel {
-  font-size: 12px;
+  font-size: 11.5px;
   font-weight: 600;
+  letter-spacing: 0.005em;
   color: var(--text-secondary);
 }
 
 .statValue {
-  font-family: $font-mono;
-  font-size: 28px;
+  font-family: $font-display;
+  font-size: 26px;
   line-height: 1.1;
-  font-weight: 600;
-  letter-spacing: -0.01em;
+  font-weight: 640;
+  letter-spacing: -0.022em;
   color: var(--text-primary);
   font-variant-numeric: tabular-nums;
 }
@@ -454,7 +412,7 @@
   z-index: 1;
   display: flex;
   flex-direction: column;
-  gap: $spacing-lg;
+  gap: 18px;
 }
 
 .sectionHead {
@@ -469,26 +427,27 @@
   align-items: center;
   gap: 7px;
   font-family: $font-mono;
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.12em;
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
   color: var(--text-tertiary);
 
   &::before {
     content: '▍';
     color: var(--viz-success);
-    font-size: 12px;
+    font-size: 11px;
     line-height: 1;
   }
 }
 
 .sectionTitle {
   margin: 0;
-  font-size: clamp(22px, 2.6vw, 30px);
-  line-height: 1.18;
-  font-weight: 650;
-  letter-spacing: -0.02em;
+  font-family: $font-display;
+  font-size: clamp(17px, 1.7vw, 21px);
+  line-height: 1.22;
+  font-weight: 660;
+  letter-spacing: -0.018em;
   color: var(--text-primary);
   text-wrap: balance;
 }
@@ -496,7 +455,7 @@
 .sectionDescription {
   margin: 0;
   max-width: 64ch;
-  font-size: 14px;
+  font-size: 13px;
   line-height: 1.6;
   color: var(--text-secondary);
 }
@@ -505,10 +464,11 @@
   display: flex;
   flex-direction: column;
   gap: $spacing-md;
-  padding: clamp($spacing-lg, 2.4vw, 28px);
-  border-radius: 16px;
-  border: 1px solid var(--border-color);
-  background: color-mix(in srgb, var(--bg-primary) 82%, transparent);
+  padding: 20px;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--hairline);
+  background: var(--bg-primary);
+  box-shadow: $shadow-sm;
 }
 
 .panelHead {
@@ -552,6 +512,139 @@
   color: var(--text-tertiary);
 }
 
+/* ---------- 用量与估算消费 ---------- */
+
+/* 区块头右侧挂窗口切换：窄屏时改为纵向堆叠 */
+.usageHead {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: $spacing-md;
+
+  @media (max-width: 720px) {
+    flex-direction: column;
+    align-items: stretch;
+  }
+}
+
+/* 刷新提示与范围选择器同排，切范围时不遮挡图表 */
+.usageControls {
+  display: flex;
+  align-items: center;
+  gap: $spacing-sm;
+  flex: 0 0 auto;
+}
+
+.refreshHint {
+  font-size: 11.5px;
+  color: var(--text-tertiary);
+  animation: usagePulse 1.4s ease-in-out infinite;
+}
+
+@keyframes usagePulse {
+  0%,
+  100% {
+    opacity: 0.45;
+  }
+
+  50% {
+    opacity: 1;
+  }
+}
+
+/* 图表容器：切范围时保留旧数据并降饱和，而不是闪成加载态 */
+.usageBody {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  transition: opacity 160ms var(--ease-out-strong, ease-out);
+}
+
+.refreshing {
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+/* 错误态：文案 + 重试入口，不把 axios 原文直接抛给用户 */
+.usageError {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: $spacing-sm;
+  padding: $spacing-sm 0;
+}
+
+.usageErrorText {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--text-secondary);
+}
+
+/*
+ * 加载态：按最终形状占位（一张柱状图 + 两栏条形排行），
+ * 而不是往面板里塞一行"加载中"文字 —— 首屏不会在数据到达时重排。
+ * 高度/宽度由 Skeleton 的 inline style 提供，这里只管排布。
+ */
+.usageSkeleton {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.skeletonChart {
+  display: flex;
+  align-items: flex-end;
+  gap: 6px;
+  height: 180px;
+}
+
+.skeletonChartBar {
+  flex: 1 1 0;
+  min-width: 0;
+}
+
+/* 骨架只服务视觉，文案交给 role=status，避免读屏读到一堆空盒子 */
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .refreshHint {
+    animation: none;
+    opacity: 0.8;
+  }
+
+  .usageBody {
+    transition: none;
+  }
+}
+
+/* 模型 / 供应商两栏共用一块面板，视觉上属于同一行 */
+.usageSplit {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: $spacing-xl;
+  padding: 20px;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--hairline);
+  background: var(--bg-primary);
+  box-shadow: $shadow-sm;
+
+  @media (max-width: 900px) {
+    grid-template-columns: minmax(0, 1fr);
+    gap: $spacing-lg;
+  }
+}
+
 /* ---------- 供应商列表 ---------- */
 
 .fleetList {
@@ -568,7 +661,7 @@
   align-items: center;
   gap: $spacing-md;
   padding: $spacing-md 0;
-  border-bottom: 1px solid var(--border-color);
+  border-bottom: 1px solid var(--hairline);
 
   &:last-child {
     border-bottom: none;
@@ -601,15 +694,15 @@
 }
 
 .fleetName {
-  font-size: 14px;
-  font-weight: 600;
+  font-size: 13.5px;
+  font-weight: 580;
   color: var(--text-primary);
   @include text-ellipsis;
 }
 
 .fleetMeta {
-  font-size: 12px;
-  color: var(--text-tertiary);
+  font-size: 11.5px;
+  color: var(--text-quaternary);
 }
 
 .fleetSpark {
@@ -630,15 +723,15 @@
 
 .fleetTotal {
   font-family: $font-mono;
-  font-size: 15px;
-  font-weight: 600;
+  font-size: 14px;
+  font-weight: 580;
   color: var(--text-primary);
   font-variant-numeric: tabular-nums;
 }
 
 .fleetTotalLabel {
-  font-size: 11px;
-  color: var(--text-tertiary);
+  font-size: 10.5px;
+  color: var(--text-quaternary);
 }
 
 .fleetRate {
@@ -734,15 +827,15 @@
   flex-direction: column;
   gap: $spacing-sm;
   padding-top: $spacing-md;
-  border-top: 1px solid var(--border-color);
+  border-top: 1px solid var(--hairline);
 }
 
 .typeBreakdownLabel {
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.14em;
+  font-size: 10.5px;
+  font-weight: 620;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: var(--text-tertiary);
+  color: var(--text-quaternary);
 }
 
 .typeList {
@@ -760,9 +853,9 @@
   gap: 6px;
   padding: 5px 10px;
   border-radius: $radius-full;
-  border: 1px solid var(--border-color);
-  background: color-mix(in srgb, var(--bg-secondary) 60%, transparent);
-  font-size: 12px;
+  border: 1px solid var(--hairline);
+  background: var(--bg-tertiary);
+  font-size: 11.5px;
   color: var(--text-secondary);
 
   b {
@@ -786,7 +879,7 @@
   justify-content: space-between;
   gap: $spacing-md;
   padding: 9px 0;
-  border-bottom: 1px solid var(--border-color);
+  border-bottom: 1px solid var(--hairline);
 
   &:last-child {
     border-bottom: none;
@@ -830,12 +923,12 @@
   gap: 6px;
   padding: 5px 10px;
   border-radius: $radius-full;
-  border: 1px solid var(--border-color);
-  font-size: 12px;
+  border: 1px solid var(--hairline);
+  font-size: 11.5px;
   color: var(--text-secondary);
 
   b {
-    font-weight: 650;
+    font-weight: 640;
   }
 }
 
@@ -849,7 +942,7 @@
 }
 
 .toggleOff {
-  background: color-mix(in srgb, var(--bg-secondary) 60%, transparent);
+  background: var(--bg-tertiary);
 
   b {
     color: var(--text-tertiary);
@@ -877,10 +970,11 @@
   display: flex;
   flex-direction: column;
   gap: 6px;
-  padding: $spacing-lg;
-  border-radius: 14px;
-  border: 1px solid var(--border-color);
-  background: color-mix(in srgb, var(--bg-primary) 76%, transparent);
+  padding: 18px;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--hairline);
+  background: var(--bg-primary);
+  box-shadow: $shadow-sm;
   text-decoration: none;
   overflow: hidden;
   transition:
@@ -892,7 +986,7 @@
     &:hover {
       transform: translateY(-2px);
       border-color: var(--border-hover);
-      box-shadow: 0 14px 30px rgb(0 0 0 / 0.12);
+      box-shadow: $shadow-lg;
 
       .ctaArrow {
         transform: translateX(3px);
@@ -929,23 +1023,24 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 36px;
-  height: 36px;
+  width: 34px;
+  height: 34px;
   margin-bottom: $spacing-xs;
-  border-radius: $radius-md;
-  border: 1px solid var(--border-color);
-  background: color-mix(in srgb, var(--text-primary) 6%, transparent);
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--hairline);
+  background: var(--bg-tertiary);
   color: var(--text-primary);
 }
 
 .ctaTitle {
-  font-size: 15px;
-  font-weight: 650;
+  font-size: 14px;
+  font-weight: 640;
+  letter-spacing: -0.008em;
   color: var(--text-primary);
 }
 
 .ctaDescription {
-  font-size: 13px;
+  font-size: 12.5px;
   line-height: 1.5;
   color: var(--text-secondary);
 }

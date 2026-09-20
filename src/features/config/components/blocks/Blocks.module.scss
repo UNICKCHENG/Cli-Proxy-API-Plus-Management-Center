@@ -42,7 +42,7 @@
   line-height: 1;
   cursor: pointer;
   opacity: 0.58;
-  transition: opacity var(--dur-hover, 200ms) var(--ease-out-strong, ease-out);
+  transition: opacity $transition-fast;
 
   &:hover {
     opacity: 1;
@@ -79,7 +79,7 @@
 .blockLabel {
   color: var(--text-secondary);
   font-size: 12px;
-  font-weight: 700;
+  font-weight: 580;
   line-height: 1.4;
 }
 
@@ -89,12 +89,13 @@
 }
 
 .emptyState {
-  border: 1px dashed var(--border-color);
-  border-radius: 10px;
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius-md);
   padding: 16px;
-  color: var(--text-secondary);
+  color: var(--text-tertiary);
+  font-size: 12.5px;
   text-align: center;
-  background: transparent;
+  background: var(--bg-tertiary);
 }
 
 /* ---------- 规则卡 ---------- */
@@ -103,10 +104,10 @@
   display: flex;
   flex-direction: column;
   gap: 12px;
-  padding: 12px;
-  border: 1px solid var(--border-color);
-  border-radius: 10px;
-  background: color-mix(in srgb, var(--bg-secondary) 64%, transparent);
+  padding: 13px;
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius-md);
+  background: var(--bg-tertiary);
 }
 
 .ruleCardHeader {
@@ -119,9 +120,9 @@
 
 .ruleCardTitle {
   color: var(--text-primary);
-  font-size: 14px;
-  font-weight: 700;
-  line-height: 1.25;
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.3;
 }
 
 /* ---------- 字符串列表 ---------- */
@@ -173,7 +174,7 @@
   overflow: hidden;
   // 轨道 = 填充色的淡化步阶，未点亮的段也带着当前状态
   background: color-mix(in srgb, var(--strength-color) 16%, transparent);
-  transition: background-color var(--dur-hover, 200ms) var(--ease-out-strong, ease-out);
+  transition: background-color $transition-fast;
 }
 
 .strengthSegmentFill {
@@ -185,8 +186,8 @@
   transform-origin: left center;
   // 段内比常规交互再快一档，把预算让给段间的 stagger
   transition:
-    transform var(--dur-press, 160ms) var(--ease-out-strong, ease-out),
-    background-color var(--dur-hover, 200ms) var(--ease-out-strong, ease-out);
+    transform var(--dur-press) var(--ease-out-strong),
+    background-color $transition-fast;
 
   // 延迟写在目标态上：点亮时依次排队，熄灭是系统响应，立刻发生
   &[data-filled='true'] {
@@ -196,7 +197,7 @@
 
   // 降级只去掉位移和排队，颜色变化保留（它才是状态本身）
   @media (prefers-reduced-motion: reduce) {
-    transition: background-color var(--dur-hover, 200ms) linear;
+    transition: background-color $transition-fast;
 
     &[data-filled='true'] {
       transition-delay: 0ms;
@@ -206,10 +207,10 @@
 
 .strengthLabel {
   min-height: 16px;
-  font-size: 12px;
+  font-size: 11.5px;
   line-height: 16px;
   color: var(--strength-color);
-  transition: color var(--dur-hover, 200ms) var(--ease-out-strong, ease-out);
+  transition: color $transition-fast;
 }
 
 /* ---------- 插件源认证 ---------- */
@@ -222,8 +223,8 @@
 
 .storeAuthEmpty {
   margin: 0;
-  color: var(--text-secondary);
-  font-size: 13px;
+  color: var(--text-tertiary);
+  font-size: 12.5px;
   line-height: 1.5;
 }
 
@@ -231,10 +232,10 @@
   display: flex;
   flex-direction: column;
   gap: 12px;
-  padding: 14px;
-  border: 1px solid var(--border-color);
-  border-radius: 10px;
-  background: color-mix(in srgb, var(--bg-secondary) 42%, transparent);
+  padding: 13px;
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius-md);
+  background: var(--bg-tertiary);
 }
 
 .storeAuthRuleHeader {
@@ -248,8 +249,8 @@
     min-width: 0;
     overflow: hidden;
     color: var(--text-primary);
-    font-size: 13px;
-    font-weight: 700;
+    font-size: 12.5px;
+    font-weight: 600;
     text-overflow: ellipsis;
     white-space: nowrap;
   }
@@ -274,24 +275,24 @@
   > span {
     color: var(--text-secondary);
     font-size: 12px;
-    font-weight: 700;
+    font-weight: 580;
   }
 }
 
 .storeAuthApplyTo {
   display: flex;
   flex-direction: column;
-  gap: 7px;
+  gap: 6px;
 
   > span {
     color: var(--text-secondary);
     font-size: 12px;
-    font-weight: 700;
+    font-weight: 580;
   }
 
   small {
-    color: var(--text-tertiary);
-    font-size: 12px;
+    color: var(--text-quaternary);
+    font-size: 11.5px;
     line-height: 1.45;
   }
 }
@@ -306,10 +307,10 @@
   display: inline-flex;
   align-items: center;
   gap: 7px;
-  min-height: 28px;
+  min-height: 26px;
   color: var(--text-secondary);
   font-size: 12px;
-  font-weight: 650;
+  font-weight: 560;
   line-height: 1.4;
 
   input {
@@ -344,7 +345,7 @@
   gap: 12px;
   margin-left: 10px;
   padding-left: 12px;
-  border-left: 2px solid var(--border-color);
+  border-left: 1px solid var(--hairline);
 }
 
 .payloadAdvancedGrid {
@@ -423,7 +424,7 @@
 @include mobile {
   .storeAuthRule,
   .ruleCard {
-    padding: 14px;
+    padding: 12px;
   }
 
   .blockHeaderRow,
@@ -451,7 +452,7 @@
 @media (max-width: 380px) {
   .storeAuthRule,
   .ruleCard {
-    padding: 12px;
+    padding: 11px;
   }
 }
 

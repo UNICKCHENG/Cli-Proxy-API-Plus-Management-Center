@@ -1,68 +1,117 @@
 /**
- * 主题样式
+ * 主题样式 —— macOS 26（Liquid Glass）
+ *
+ * 三套主题保持既有切换入口不变：
+ *   :root                     light（默认，中性灰桌面 + 白色窗格）
+ *   [data-theme='white']      white（纯白，仅靠发丝线分层）
+ *   [data-theme='dark']       dark （macOS 深色）
+ *
+ * 材料（material）词汇表：
+ *   --material-glass         浮动工具条/按钮组（最薄）
+ *   --material-glass-strong  弹层/浮窗（较厚，保证可读）
+ *   --material-sidebar       侧边栏
+ *   --material-field         输入框凹陷面
+ * 所有材料都由 backdrop-filter 提供"液体玻璃"的折射感，透明度不达标时
+ * 由文件末尾的 prefers-reduced-transparency 分支回退为不透明色。
  */
 
 // 浅色主题（默认）
 :root {
-  // 极简暖灰：浅色模式
-  --bg-secondary: #faf9f5; // 页面背景（纸感）
-  --bg-primary: #f0eee8; // 容器/卡片背景
-  --bg-tertiary: #e9e6df; // hover/次级背景
-  --bg-hover: var(--bg-tertiary);
-  --bg-quinary: #f6f4ee;
-  --bg-error-light: rgba(198, 87, 70, 0.1);
-  --floating-surface: #fffdf9;
-  --floating-shadow: 0 12px 26px rgba(0, 0, 0, 0.14);
+  color-scheme: light;
 
-  --text-primary: #2d2a26;
-  --text-secondary: #6d6760;
-  --text-tertiary: #a29c95;
-  --text-quaternary: #c0bab3;
+  // ——— 表面 ———
+  // 三级层次：桌面（窗口底）< 页面（窗格内底）< 卡片（抬升面）
+  --bg-desktop: #dcdce1; // 窗口底：仅侧边栏玻璃与窗口缝隙可见
+  --bg-secondary: #f5f5f7; // 窗格内底（页面背景）
+  --bg-primary: #ffffff; // 卡片/抬升面
+  --bg-tertiary: #eaeaee; // 凹陷面（分段控件轨道、输入框填充）
+  --bg-hover: var(--bg-tertiary);
+  --bg-quinary: #f7f7f8;
+  --bg-error-light: rgb(255 59 48 / 0.1);
+  --floating-surface: #ffffff;
+  --floating-shadow:
+    0 14px 34px -10px rgb(0 0 0 / 0.22),
+    0 1px 2px rgb(0 0 0 / 0.08);
+
+  // ——— 文本 ———
+  --text-primary: #1d1d1f;
+  --text-secondary: #6e6e73;
+  --text-tertiary: #8e8e93;
+  --text-quaternary: #b0b0b5;
   --text-muted: var(--text-tertiary);
 
-  --border-color: #e3e1db; // 边框/分割线
+  // ——— 描边 ———
+  --border-color: #d9d9de;
   --border-secondary: var(--border-color);
-  --border-primary: #d5d2cb;
-  --border-hover: #cecac4;
+  --border-primary: #c8c8ce;
+  --border-hover: #b4b4bb;
+  --hairline: rgb(0 0 0 / 0.09);
 
-  --primary-color: #8b8680; // 行动色（主色）
-  --primary-hover: #7f7a74;
-  --primary-active: #726d67;
+  // ——— 强调色（macOS 系统蓝）———
+  --primary-color: #007aff;
+  --primary-hover: #0a70e0;
+  --primary-active: #0062cc;
   --primary-contrast: #ffffff;
+  --accent-color: var(--primary-color);
 
-  --success-color: #10b981;
-  --quota-medium-color: #e0aa14;
-  --warning-color: #c65746; // 错误/警告色
-  --error-color: #c65746;
+  --success-color: #34c759;
+  --quota-medium-color: #cc8a00;
+  --warning-color: #ff9f0a;
+  --error-color: #ff3b30;
   --danger-color: var(--error-color);
   --info-color: var(--primary-color);
 
-  --warning-bg: rgba(198, 87, 70, 0.12);
-  --warning-border: rgba(198, 87, 70, 0.35);
-  --warning-text: var(--warning-color);
+  --warning-bg: rgb(255 149 10 / 0.14);
+  --warning-border: rgb(255 149 10 / 0.36);
+  --warning-text: #9a5b00;
 
-  --success-badge-bg: #d1fae5;
-  --success-badge-text: #065f46;
-  --success-badge-border: #6ee7b7;
+  --success-badge-bg: rgb(52 199 89 / 0.16);
+  --success-badge-text: #1b7a35;
+  --success-badge-border: rgb(52 199 89 / 0.34);
 
-  --failure-badge-bg: rgba(198, 87, 70, 0.14);
-  --failure-badge-text: #8a3a30;
-  --failure-badge-border: rgba(198, 87, 70, 0.35);
+  --failure-badge-bg: rgb(255 59 48 / 0.13);
+  --failure-badge-text: #b3261e;
+  --failure-badge-border: rgb(255 59 48 / 0.32);
 
-  --count-badge-bg: rgba(139, 134, 128, 0.18);
-  --count-badge-text: var(--primary-active);
+  --count-badge-bg: rgb(0 0 0 / 0.08);
+  --count-badge-text: var(--text-secondary);
 
-  --shadow: 0 1px 2px 0 rgb(0 0 0 / 0.08);
-  --shadow-lg: 0 10px 18px -3px rgb(0 0 0 / 0.1);
+  // ——— 阴影（分层递进，避免"发光"感）———
+  --shadow: 0 1px 2px rgb(0 0 0 / 0.07);
+  --shadow-lg: 0 18px 44px -14px rgb(0 0 0 / 0.26);
+  --panel-shadow:
+    0 1px 1px rgb(0 0 0 / 0.04),
+    0 12px 32px -16px rgb(0 0 0 / 0.22);
+  --window-shadow: 0 28px 70px -22px rgb(0 0 0 / 0.34);
 
-  --radius-md: 8px;
+  // 圆角：同心刻度——窗口 20 > 浮层 14 > 控件 10 > 内联 8 > 徽标 6
+  --radius-xs: 6px;
+  --radius-sm: 8px;
+  --radius-md: 10px;
+  --radius-lg: 16px;
+  --radius-xl: 20px;
+  --radius-2xl: 26px;
+
+  // ——— 材料 ———
+  --glass-blur: 30px;
+  --glass-saturate: 180%;
+  --glass-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+  --glass-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+  --material-glass: rgb(255 255 255 / 0.68);
+  --material-glass-strong: rgb(252 252 253 / 0.86);
+  --material-sidebar: rgb(246 246 248 / 0.7);
+  --material-field: #ffffff;
+  --glass-bg: var(--material-glass);
+  --glass-bg-secondary: var(--material-sidebar);
+  --glass-border: rgb(255 255 255 / 0.5);
+  --highlight-inset: inset 0 1px 0 rgb(255 255 255 / 0.7);
 
   // Workbench tokens (Home parity)
   --primary-8: color-mix(in srgb, var(--primary-color) 8%, transparent);
   --primary-10: color-mix(in srgb, var(--primary-color) 10%, transparent);
   --primary-30: color-mix(in srgb, var(--primary-color) 30%, transparent);
-  --amber-color: #d97706;
-  --amber-text: #92400e;
+  --amber-color: #ff9f0a;
+  --amber-text: #9a5b00;
   --amber-10: color-mix(in srgb, var(--amber-color) 10%, transparent);
   --amber-30: color-mix(in srgb, var(--amber-color) 30%, transparent);
   --destructive-color: var(--error-color);
@@ -72,86 +121,101 @@
   --muted-foreground: var(--text-secondary);
   --accent-bg: var(--bg-tertiary);
 
-  // Glass effect (blurred surfaces)
-  --glass-blur: 12px;
-  --glass-backdrop-filter: blur(var(--glass-blur));
-  --glass-filter: blur(var(--glass-blur));
-  --glass-bg: color-mix(in srgb, var(--bg-primary) 82%, transparent);
-  --glass-bg-secondary: color-mix(in srgb, var(--bg-secondary) 82%, transparent);
-  --glass-border: color-mix(in srgb, var(--border-color) 60%, transparent);
-
-  // 可视化配色：与语义色同源；深色模式下重新取步阶（见 [data-theme='dark']）。
-  // 规则：翡翠绿只表达「活的流量」。
-  --viz-success: #10b981;
-  --viz-failure: #c65746;
+  // 可视化配色：与语义色同源。
+  // 规则：绿只表达「活的流量」，红只表达「失败」。
+  --viz-success: #1f9d55;
+  --viz-failure: #d9483f;
 
   // 动效词汇表：内置 ease 太弱，交互反馈统一用强减速曲线。
-  // 按压 160ms / 悬停 200ms，UI 动效不超过 300ms。
   --ease-out-strong: cubic-bezier(0.23, 1, 0.32, 1);
-  --dur-press: 160ms;
-  --dur-hover: 200ms;
+  --dur-press: 140ms;
+  --dur-hover: 180ms;
 }
 
-// 纯白主题
+// 纯白主题：去掉灰底，完全靠发丝线分层
 [data-theme='white'] {
+  color-scheme: light;
+
+  --bg-desktop: #e9e9ec;
   --bg-secondary: #ffffff;
   --bg-primary: #ffffff;
-  --bg-tertiary: #f6f6f6;
+  --bg-tertiary: #f2f2f4;
   --bg-hover: var(--bg-tertiary);
-  --bg-quinary: #ffffff;
-  --bg-error-light: rgba(198, 87, 70, 0.08);
+  --bg-quinary: #fafafa;
+  --bg-error-light: rgb(255 59 48 / 0.08);
   --floating-surface: #ffffff;
-  --floating-shadow: 0 12px 26px rgba(0, 0, 0, 0.12);
+  --floating-shadow:
+    0 14px 34px -12px rgb(0 0 0 / 0.16),
+    0 1px 2px rgb(0 0 0 / 0.06);
 
-  --text-primary: #2d2a26;
-  --text-secondary: #6d6760;
-  --text-tertiary: #a29c95;
-  --text-quaternary: #c0bab3;
+  --text-primary: #1d1d1f;
+  --text-secondary: #6e6e73;
+  --text-tertiary: #8e8e93;
+  --text-quaternary: #b0b0b5;
   --text-muted: var(--text-tertiary);
 
-  --border-color: #e5e5e5;
+  --border-color: #e2e2e6;
   --border-secondary: var(--border-color);
-  --border-primary: #d9d9d9;
-  --border-hover: #cccccc;
+  --border-primary: #d2d2d7;
+  --border-hover: #bdbdc3;
+  --hairline: rgb(0 0 0 / 0.075);
 
-  --primary-color: #8b8680;
-  --primary-hover: #7f7a74;
-  --primary-active: #726d67;
+  --primary-color: #007aff;
+  --primary-hover: #0a70e0;
+  --primary-active: #0062cc;
   --primary-contrast: #ffffff;
+  --accent-color: var(--primary-color);
 
-  --success-color: #10b981;
-  --quota-medium-color: #e0aa14;
-  --warning-color: #c65746;
-  --error-color: #c65746;
+  --success-color: #34c759;
+  --quota-medium-color: #cc8a00;
+  --warning-color: #ff9f0a;
+  --error-color: #ff3b30;
   --danger-color: var(--error-color);
   --info-color: var(--primary-color);
 
-  --warning-bg: rgba(198, 87, 70, 0.12);
-  --warning-border: rgba(198, 87, 70, 0.35);
-  --warning-text: var(--warning-color);
+  --warning-bg: rgb(255 149 10 / 0.14);
+  --warning-border: rgb(255 149 10 / 0.36);
+  --warning-text: #9a5b00;
 
-  --success-badge-bg: #d1fae5;
-  --success-badge-text: #065f46;
-  --success-badge-border: #6ee7b7;
+  --success-badge-bg: rgb(52 199 89 / 0.16);
+  --success-badge-text: #1b7a35;
+  --success-badge-border: rgb(52 199 89 / 0.34);
 
-  --failure-badge-bg: rgba(198, 87, 70, 0.14);
-  --failure-badge-text: #8a3a30;
-  --failure-badge-border: rgba(198, 87, 70, 0.35);
+  --failure-badge-bg: rgb(255 59 48 / 0.13);
+  --failure-badge-text: #b3261e;
+  --failure-badge-border: rgb(255 59 48 / 0.32);
 
-  --count-badge-bg: rgba(139, 134, 128, 0.18);
-  --count-badge-text: var(--primary-active);
+  --count-badge-bg: rgb(0 0 0 / 0.07);
+  --count-badge-text: var(--text-secondary);
 
-  --shadow: 0 1px 2px 0 rgb(0 0 0 / 0.08);
-  --shadow-lg: 0 10px 18px -3px rgb(0 0 0 / 0.1);
+  --shadow: 0 1px 2px rgb(0 0 0 / 0.06);
+  --shadow-lg: 0 18px 44px -16px rgb(0 0 0 / 0.2);
+  --panel-shadow:
+    0 1px 1px rgb(0 0 0 / 0.035),
+    0 10px 26px -18px rgb(0 0 0 / 0.16);
+  --window-shadow: 0 24px 60px -24px rgb(0 0 0 / 0.24);
 
-  --radius-md: 8px;
+  --radius-xs: 6px;
+  --radius-sm: 8px;
+  --radius-md: 10px;
+  --radius-lg: 16px;
+  --radius-xl: 20px;
+  --radius-2xl: 26px;
 
-  // Workbench tokens (Home parity)
+  --material-glass: rgb(255 255 255 / 0.82);
+  --material-glass-strong: rgb(255 255 255 / 0.92);
+  --material-sidebar: rgb(250 250 252 / 0.86);
+  --material-field: #ffffff;
+  --glass-bg: var(--material-glass);
+  --glass-bg-secondary: var(--material-sidebar);
+  --glass-border: rgb(0 0 0 / 0.06);
+  --highlight-inset: inset 0 1px 0 rgb(255 255 255 / 0.9);
+
   --primary-8: color-mix(in srgb, var(--primary-color) 8%, transparent);
   --primary-10: color-mix(in srgb, var(--primary-color) 10%, transparent);
   --primary-30: color-mix(in srgb, var(--primary-color) 30%, transparent);
-  --amber-color: #d97706;
-  --amber-text: #92400e;
+  --amber-color: #ff9f0a;
+  --amber-text: #9a5b00;
   --amber-10: color-mix(in srgb, var(--amber-color) 10%, transparent);
   --amber-30: color-mix(in srgb, var(--amber-color) 30%, transparent);
   --destructive-color: var(--error-color);
@@ -162,67 +226,91 @@
   --accent-bg: var(--bg-tertiary);
 }
 
-// 深色主题（#191919）
+// 深色主题
 [data-theme='dark'] {
-  // 极简暖灰：深色模式（提升对比度与层级）
-  --bg-secondary: #151412; // 页面背景
-  --bg-primary: #1d1b18; // 容器/卡片背景
-  --bg-tertiary: #262320; // hover/次级背景
-  --bg-hover: #2e2a26;
-  --bg-quinary: #191714;
-  --bg-error-light: rgba(198, 87, 70, 0.18);
-  --floating-surface: #2a2723;
-  --floating-shadow: 0 14px 30px rgba(0, 0, 0, 0.4);
+  color-scheme: dark;
 
-  --text-primary: #f6f4f1;
-  --text-secondary: #c9c3bb;
-  --text-tertiary: #9c958d;
-  --text-quaternary: #6f6962;
+  --bg-desktop: #101012; // 窗口底
+  --bg-secondary: #1c1c1e; // 窗格内底（页面背景）
+  --bg-primary: #2c2c2e; // 卡片/抬升面
+  --bg-tertiary: #38383a; // 凹陷面
+  --bg-hover: #48484a;
+  --bg-quinary: #232325;
+  --bg-error-light: rgb(255 69 58 / 0.18);
+  --floating-surface: #3a3a3c;
+  --floating-shadow:
+    0 18px 40px -12px rgb(0 0 0 / 0.6),
+    0 1px 2px rgb(0 0 0 / 0.4);
+
+  --text-primary: #f5f5f7;
+  --text-secondary: #a1a1a6;
+  --text-tertiary: #8e8e93;
+  --text-quaternary: #636366;
   --text-muted: var(--text-tertiary);
 
-  --border-color: #3a3530;
+  --border-color: #3d3d40;
   --border-secondary: var(--border-color);
-  --border-primary: #4a453f;
-  --border-hover: #5a544d;
+  --border-primary: #48484a;
+  --border-hover: #5a5a5e;
+  --hairline: rgb(255 255 255 / 0.09);
 
-  --primary-color: #8b8680;
-  --primary-hover: #9a948e;
-  --primary-active: #a6a099;
+  --primary-color: #0a84ff;
+  --primary-hover: #3b9bff;
+  --primary-active: #4aa3ff;
   --primary-contrast: #ffffff;
+  --accent-color: var(--primary-color);
 
-  --success-color: #10b981;
-  --quota-medium-color: #ffd862;
-  --warning-color: #c65746;
-  --error-color: #c65746;
+  --success-color: #30d158;
+  --quota-medium-color: #ffd60a;
+  --warning-color: #ff9f0a;
+  --error-color: #ff453a;
   --danger-color: var(--error-color);
   --info-color: var(--primary-color);
 
-  --warning-bg: rgba(198, 87, 70, 0.22);
-  --warning-border: rgba(198, 87, 70, 0.45);
-  --warning-text: #f1b0a6;
+  --warning-bg: rgb(255 159 10 / 0.18);
+  --warning-border: rgb(255 159 10 / 0.4);
+  --warning-text: #ffc46b;
 
-  --success-badge-bg: rgba(6, 78, 59, 0.3);
-  --success-badge-text: #6ee7b7;
-  --success-badge-border: #059669;
+  --success-badge-bg: rgb(48 209 88 / 0.18);
+  --success-badge-text: #6ee7a0;
+  --success-badge-border: rgb(48 209 88 / 0.4);
 
-  --failure-badge-bg: rgba(198, 87, 70, 0.24);
-  --failure-badge-text: #f1b0a6;
-  --failure-badge-border: rgba(198, 87, 70, 0.5);
+  --failure-badge-bg: rgb(255 69 58 / 0.18);
+  --failure-badge-text: #ff9d94;
+  --failure-badge-border: rgb(255 69 58 / 0.4);
 
-  --count-badge-bg: rgba(139, 134, 128, 0.28);
-  --count-badge-text: var(--primary-active);
+  --count-badge-bg: rgb(255 255 255 / 0.12);
+  --count-badge-text: var(--text-secondary);
 
-  --shadow: 0 1px 3px 0 rgb(0 0 0 / 0.3);
-  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.3);
+  --shadow: 0 1px 3px rgb(0 0 0 / 0.4);
+  --shadow-lg: 0 20px 46px -18px rgb(0 0 0 / 0.62);
+  --panel-shadow:
+    0 1px 1px rgb(0 0 0 / 0.24),
+    0 14px 34px -18px rgb(0 0 0 / 0.6);
+  --window-shadow: 0 30px 74px -24px rgb(0 0 0 / 0.72);
 
-  --radius-md: 8px;
+  --radius-xs: 6px;
+  --radius-sm: 8px;
+  --radius-md: 10px;
+  --radius-lg: 16px;
+  --radius-xl: 20px;
+  --radius-2xl: 26px;
+
+  --material-glass: rgb(44 44 46 / 0.66);
+  --material-glass-strong: rgb(44 44 46 / 0.84);
+  --material-sidebar: rgb(38 38 40 / 0.66);
+  --material-field: rgb(255 255 255 / 0.06);
+  --glass-bg: var(--material-glass);
+  --glass-bg-secondary: var(--material-sidebar);
+  --glass-border: rgb(255 255 255 / 0.08);
+  --highlight-inset: inset 0 1px 0 rgb(255 255 255 / 0.06);
 
   // Workbench tokens (Home parity, deeper amber for dark)
   --primary-8: color-mix(in srgb, var(--primary-color) 8%, transparent);
   --primary-10: color-mix(in srgb, var(--primary-color) 10%, transparent);
   --primary-30: color-mix(in srgb, var(--primary-color) 30%, transparent);
-  --amber-color: #f59e0b;
-  --amber-text: #fcd34d;
+  --amber-color: #ffd60a;
+  --amber-text: #ffd60a;
   --amber-10: color-mix(in srgb, var(--amber-color) 14%, transparent);
   --amber-30: color-mix(in srgb, var(--amber-color) 38%, transparent);
   --destructive-color: var(--error-color);
@@ -232,20 +320,23 @@
   --muted-foreground: var(--text-secondary);
   --accent-bg: var(--bg-tertiary);
 
-  --glass-border: color-mix(in srgb, var(--border-color) 55%, transparent);
-
   // 深色卡面上 #10b981 亮度超出 OKLCH 0.48–0.67 区间，且与失败色的色盲分离度不足，
   // 因此深色单独降一档。三套主题均已通过对比度/色盲/亮度校验。
-  --viz-success: #0fae78;
-  --viz-failure: #cf4b3a;
+  --viz-success: #2fc45f;
+  --viz-failure: #ff6257;
 }
 
-@media (max-width: 768px),
-  (prefers-reduced-motion: reduce),
-  (prefers-reduced-transparency: reduce) {
-  :root {
+// 小屏 / 降低动态效果 / 降低透明度：材料回退为不透明面
+@media (max-width: 768px), (prefers-reduced-motion: reduce), (prefers-reduced-transparency: reduce) {
+  :root,
+  [data-theme='white'],
+  [data-theme='dark'] {
+    --glass-blur: 0px;
     --glass-backdrop-filter: none;
     --glass-filter: none;
+    --material-glass: var(--bg-primary);
+    --material-glass-strong: var(--bg-primary);
+    --material-sidebar: var(--bg-primary);
     --glass-bg: var(--bg-primary);
     --glass-bg-secondary: var(--bg-secondary);
     --glass-border: var(--border-color);

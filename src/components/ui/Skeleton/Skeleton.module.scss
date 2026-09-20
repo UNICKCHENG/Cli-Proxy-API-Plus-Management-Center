@@ -1,31 +1,29 @@
 @use '../../../styles/mixins' as *;
 @use '../../../styles/variables' as *;
 
+/* 骨架屏：纯色底 + 轻微呼吸。原来是一条横向扫光渐变，全仓已移除渐变。 */
+
 .skeleton {
-  background: linear-gradient(
-    90deg,
-    var(--bg-tertiary) 0%,
-    var(--bg-hover) 50%,
-    var(--bg-tertiary) 100%
-  );
-  background-size: 200% 100%;
-  animation: shimmer 1.5s ease-in-out infinite;
-  border-radius: var(--radius-md);
   display: block;
+  border-radius: var(--radius-sm);
+  background: var(--bg-tertiary);
+  animation: skeleton-breathe 1.6s ease-in-out infinite;
 }
 
-@keyframes shimmer {
-  0% {
-    background-position: 200% 0;
-  }
+/* 没有扫光之后，靠透明度表达"还在加载"，否则纯色块看起来像已加载完成的占位 */
+@keyframes skeleton-breathe {
+  0%,
   100% {
-    background-position: -200% 0;
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0.55;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .skeleton {
     animation: none;
-    background: var(--bg-tertiary);
   }
 }

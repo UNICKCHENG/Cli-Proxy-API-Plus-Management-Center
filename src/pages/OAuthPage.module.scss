@@ -26,52 +26,47 @@
 }
 
 .pageTitle {
-  font-size: 28px;
-  font-weight: 700;
-  color: var(--text-primary);
-  margin: 0 0 $spacing-xl 0;
+  @include page-title(21px);
+
+  margin: 0 0 20px;
 }
 
 .content {
   display: flex;
   flex-direction: column;
-  gap: $spacing-xl;
+  gap: 20px;
 }
 
 .providerSection {
   display: flex;
   flex-direction: column;
-  gap: $spacing-md;
+  gap: 12px;
 }
 
 .providerList {
   display: flex;
   flex-direction: column;
-  gap: $spacing-xl;
+  gap: 20px;
 }
 
 .sectionTitle {
   margin: 0;
-  color: var(--text-secondary);
-  font-size: 13px;
-  font-weight: 700;
+  color: var(--text-tertiary);
+  font-size: 10.5px;
+  font-weight: 640;
   letter-spacing: 0.08em;
+  text-transform: uppercase;
 }
 
 .featuredCard {
   position: relative;
   overflow: hidden;
-  border-color: #000;
-  background:
-    radial-gradient(circle at 92% -35%, rgba(23, 131, 255, 0.24), transparent 42%),
-    linear-gradient(
-      135deg,
-      color-mix(in srgb, #1783ff 10%, var(--bg-primary)),
-      var(--bg-primary) 64%
-    );
+  border-color: var(--hairline);
+  /* 原来是"径向高光 + 135deg 浅色底"两层渐变，取底色那一档平铺，保留淡蓝色调。 */
+  background: color-mix(in srgb, var(--primary-color) 8%, var(--bg-primary));
   box-shadow:
-    0 14px 32px -26px rgba(23, 131, 255, 0.95),
-    var(--shadow);
+    0 14px 32px -26px color-mix(in srgb, var(--primary-color) 80%, transparent),
+    $shadow-sm;
 
   > * {
     position: relative;
@@ -79,34 +74,17 @@
   }
 
   .cardTitle {
-    gap: $spacing-md;
-    font-size: 21px;
+    gap: 10px;
+    font-size: 17px;
   }
 
   .cardTitleIcon {
     box-sizing: content-box;
     width: 24px;
     height: 24px;
-    padding: 7px;
-    border-radius: 11px;
-    background: #000;
-  }
-
-  .featuredActions {
-    display: flex;
-    flex-wrap: wrap;
-    gap: $spacing-sm;
-  }
-
-  :global(.btn-primary) {
-    border-color: #1783ff;
-    background: #1783ff;
-    box-shadow: 0 8px 20px -12px rgba(23, 131, 255, 0.9);
-
-    &:hover {
-      border-color: #0875ed;
-      background: #0875ed;
-    }
+    padding: 6px;
+    border-radius: var(--radius-md);
+    background: var(--primary-color);
   }
 
   @include mobile {
@@ -116,21 +94,17 @@
   }
 }
 
-:global([data-theme='dark']) .featuredCard .cardTitleIcon {
-  background: #fff;
-}
-
 .recommendedBadge {
   display: inline-flex;
   align-items: center;
-  min-height: 24px;
-  padding: 3px 9px;
-  border: 1px solid rgba(23, 131, 255, 0.34);
+  min-height: 22px;
+  padding: 2px 9px;
+  border: 1px solid color-mix(in srgb, var(--primary-color) 34%, transparent);
   border-radius: $radius-full;
-  background: rgba(23, 131, 255, 0.11);
-  color: color-mix(in srgb, #1783ff 82%, var(--text-primary));
-  font-size: 12px;
-  font-weight: 700;
+  background: color-mix(in srgb, var(--primary-color) 11%, transparent);
+  color: var(--primary-active);
+  font-size: 11px;
+  font-weight: 620;
   letter-spacing: 0;
   line-height: 1;
   white-space: nowrap;
@@ -140,14 +114,14 @@
   max-width: 720px;
   margin: 0;
   color: var(--text-secondary);
-  font-size: 15px;
-  line-height: 1.65;
+  font-size: 13px;
+  line-height: 1.6;
 }
 
 .cardContent {
   display: flex;
   flex-direction: column;
-  gap: $spacing-md;
+  gap: 12px;
 
   :global(.form-group) {
     margin-bottom: 0;
@@ -161,14 +135,14 @@
 
 .cardHint {
   margin: 0;
-  font-size: 13px;
+  font-size: 12.5px;
   line-height: 1.6;
   color: var(--text-secondary);
 }
 
 .cardHintSecondary {
   margin: 0;
-  font-size: 12px;
+  font-size: 11.5px;
   line-height: 1.5;
   color: var(--text-tertiary);
 }
@@ -176,12 +150,12 @@
 .oauthSection {
   display: flex;
   flex-direction: column;
-  gap: $spacing-lg;
+  gap: 14px;
 }
 
 .oauthGrid {
   display: grid;
-  gap: $spacing-lg;
+  gap: 14px;
   grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
 
   @include mobile {
@@ -192,27 +166,28 @@
 .oauthCard {
   display: flex;
   flex-direction: column;
-  gap: $spacing-md;
+  gap: 12px;
 }
 
 .oauthStatus {
-  padding: $spacing-md;
-  border-radius: $radius-md;
-  font-size: 14px;
+  padding: 10px 12px;
+  border-radius: var(--radius-md);
+  font-size: 12.5px;
+  line-height: 1.5;
 
   &.success {
-    background-color: rgba(34, 197, 94, 0.1);
-    color: #16a34a;
+    background-color: color-mix(in srgb, var(--success-color) 11%, transparent);
+    color: var(--viz-success);
   }
 
   &.error {
-    background-color: rgba($error-color, 0.12);
-    color: $error-color;
+    background-color: color-mix(in srgb, var(--error-color) 11%, transparent);
+    color: var(--error-color);
   }
 
   &.waiting {
-    background-color: rgba($primary-color, 0.12);
-    color: var(--primary-color);
+    background-color: color-mix(in srgb, var(--primary-color) 11%, transparent);
+    color: var(--primary-active);
   }
 }
 
@@ -220,35 +195,37 @@
   margin-top: 0;
   display: flex;
   flex-direction: column;
-  gap: $spacing-sm;
+  gap: 10px;
 }
 
 .callbackActions {
   display: flex;
-  gap: $spacing-md;
+  gap: 12px;
 }
 
 .authUrlBox {
-  background: var(--bg-secondary);
-  border: 1px dashed var(--border-color);
-  border-radius: $radius-md;
-  padding: $spacing-md;
+  background: var(--bg-tertiary);
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius-md);
+  padding: 12px 14px;
   display: flex;
   flex-direction: column;
-  gap: $spacing-xs;
+  gap: 4px;
 }
 
 .authUrlLabel {
-  color: var(--text-secondary);
-  font-size: 14px;
+  color: var(--text-tertiary);
+  font-size: 11.5px;
 }
 
 .authUrlValue {
-  font-weight: 700;
+  font-family: $font-mono;
+  font-size: 12px;
+  font-weight: 500;
   color: var(--text-primary);
   word-break: break-all;
   overflow-wrap: anywhere;
-  line-height: 1.5;
+  line-height: 1.55;
   max-width: 100%;
 }
 
@@ -276,8 +253,8 @@
 
   :global(.input:disabled) {
     background-color: var(--bg-tertiary);
-    border-color: var(--border-color);
-    color: var(--text-tertiary);
+    border-color: var(--hairline);
+    color: var(--text-quaternary);
     cursor: not-allowed;
   }
 }
@@ -290,7 +267,8 @@
 
 .formItemLabel {
   margin: 0;
-  font-weight: 600;
+  font-size: 12.5px;
+  font-weight: 580;
   color: var(--text-primary);
 }
 
@@ -306,24 +284,24 @@
   min-width: 220px;
   padding: 10px 12px;
   border: 1px solid var(--border-color);
-  border-radius: $radius-md;
-  background: var(--bg-primary);
+  border-radius: var(--radius-md);
+  background: var(--material-field);
   color: var(--text-primary);
-  font-size: 14px;
+  font-size: 13px;
 }
 
 .fileNamePlaceholder {
-  color: var(--text-secondary);
+  color: var(--text-quaternary);
 }
 
 .connectionBox {
-  background: var(--bg-secondary);
-  border: 1px solid var(--border-color);
-  border-radius: $radius-md;
-  padding: $spacing-md;
+  background: var(--bg-tertiary);
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius-md);
+  padding: 12px;
   display: flex;
   flex-direction: column;
-  gap: $spacing-sm;
+  gap: 10px;
 }
 
 .connectionLabel {

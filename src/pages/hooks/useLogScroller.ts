@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useLayoutEffect, useRef } from 'react';
 import type { Dispatch, RefObject, SetStateAction, UIEvent } from 'react';
+import { createRafCoalescedCallback } from '@/utils/raf';
 import type { LogState } from './logTypes';
 
 const LOAD_MORE_LINES = 200;
@@ -137,15 +138,13 @@ export function useLogScroller(options: UseLogScrollerOptions): UseLogScrollerRe
   ]);
 
   useEffect(() => {
-    const onResize = () => {
-      window.requestAnimationFrame(() => {
-        tryAutoLoadMoreUntilScrollable();
-      });
-    };
-
-    window.addEventListener('resize', onResize);
+    // 每次 resize 都无条件排队一个 rAF 会在拖拽窗口时堆叠多个回调，各自触发一次
+    // 布局读取。合并器保证每帧最多执行一次。
+    const coalesced = createRafCoalescedCallback(tryAutoLoadMoreUntilScrollable);
+    window.addEventListener('resize', coalesced.schedule);
     return () => {
-      window.removeEventListener('resize', onResize);
+      window.removeEventListener('resize', coalesced.schedule);
+      coalesced.cancel();
     };
   }, [tryAutoLoadMoreUntilScrollable]);
 

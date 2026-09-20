@@ -20,36 +20,36 @@
   position: relative;
   display: inline-flex;
   align-items: center;
-  gap: 7px;
+  gap: 6px;
   flex-shrink: 0;
   border: 0;
   background: none;
   cursor: pointer;
-  padding: 8px 12px 11px;
-  border-radius: 8px 8px 0 0;
-  font-size: 13px;
-  font-weight: 550;
+  padding: 7px 10px 10px;
+  border-radius: var(--radius-sm) var(--radius-sm) 0 0;
+  font-size: 12.5px;
+  font-weight: 540;
   color: var(--text-secondary);
   white-space: nowrap;
   transition:
-    color var(--dur-hover, 200ms) var(--ease-out-strong, ease-out),
-    background-color var(--dur-hover, 200ms) var(--ease-out-strong, ease-out);
+    color $transition-fast,
+    background-color $transition-fast;
 
   &::after {
     content: '';
     position: absolute;
-    left: 10px;
-    right: 10px;
+    left: 9px;
+    right: 9px;
     bottom: -1px;
     height: 2px;
     border-radius: $radius-full;
     background: transparent;
-    transition: background-color var(--dur-hover, 200ms) var(--ease-out-strong, ease-out);
+    transition: background-color $transition-fast;
   }
 
   &:disabled {
     cursor: not-allowed;
-    opacity: 0.55;
+    opacity: 0.45;
   }
 
   &:active:not(:disabled) {
@@ -57,21 +57,20 @@
   }
 
   &:focus-visible {
-    outline: 2px solid var(--primary-color);
-    outline-offset: -2px;
+    @include focus-ring(-2px);
   }
 }
 
 @media (hover: hover) and (pointer: fine) {
   .tab:hover:not(:disabled) {
     color: var(--text-primary);
-    background: color-mix(in srgb, var(--bg-tertiary) 55%, transparent);
+    background: color-mix(in srgb, var(--text-primary) 5%, transparent);
   }
 }
 
 .tabActive {
   color: var(--text-primary);
-  font-weight: 650;
+  font-weight: 620;
 
   &::after {
     background: var(--text-primary);
@@ -99,14 +98,14 @@
 /* 校验错误徽章：mono 数字，失败色（数据墨水走 --viz-*） */
 .tabBadge {
   font-family: $font-mono;
-  font-size: 10.5px;
-  font-weight: 650;
+  font-size: 10px;
+  font-weight: 640;
   font-variant-numeric: tabular-nums;
   line-height: 1.6;
-  color: var(--viz-failure);
+  color: var(--error-color);
   padding: 0 6px;
   border-radius: $radius-full;
-  background: color-mix(in srgb, var(--viz-failure) 12%, transparent);
+  background: color-mix(in srgb, var(--error-color) 12%, transparent);
 }
 
 /* 待保存脏点：6px 琥珀 */

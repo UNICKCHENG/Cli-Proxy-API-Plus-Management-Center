@@ -1,0 +1,322 @@
+@use '../../styles/mixins' as *;
+
+/* ============================================================
+ * 模型价格目录：壳层与容器样式。
+ * 表格视觉来自 ui/Table，这里只负责布局、页头与状态呈现。
+ * ============================================================ */
+
+/*
+ * 与仪表盘共用同一套页面壳：1120px 居中容器 + clamp 纵向节奏。
+ * 目录可达数千行，容器必须封顶，否则宽屏上表格会横贯整窗、单价列被拉到两端。
+ *
+ * 刻意不做背景环境层（渐变 wash / 网格）：macOS 26 的层次来自材料与发丝描边，
+ * 不来自背景渐变；页面的"材质"由 .panel 统一表达。
+ */
+.page {
+  width: 100%;
+  max-width: 1120px;
+  margin: 0 auto;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: clamp(32px, 4.5vh, 52px);
+}
+
+/* ---------- 页头 ---------- */
+
+.head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: $spacing-lg;
+}
+
+.headText {
+  min-width: 0;
+  max-width: 62ch;
+}
+
+/* 与仪表盘 .eyebrow 同一套：等宽小字 + 起标记色块，颜色随页面主色。 */
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  margin: 0;
+  font-family: $font-mono;
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-tertiary);
+
+  &::before {
+    content: '▍';
+    color: var(--primary-color);
+    font-size: 11px;
+    line-height: 1;
+  }
+}
+
+.title {
+  @include page-title(22px);
+
+  margin: 6px 0 0;
+  text-wrap: balance;
+}
+
+.description {
+  margin: 6px 0 0;
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--text-secondary);
+  text-wrap: pretty;
+}
+
+/* 价格表状态：条目数 / 覆盖数 / 同步时间，等宽数字避免刷新跳动。 */
+
+.meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: $spacing-lg;
+  margin: 0;
+}
+
+.metaItem {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.metaItem dt {
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--text-tertiary);
+}
+
+.metaItem dd {
+  @include tabular-nums;
+
+  margin: 0;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+/* ---------- 面板 ---------- */
+
+/*
+ * 用仓库自己的 macOS 26 材料 mixin，而不是手写一遍边框/圆角/阴影。
+ * pane() 是不透明窗格材料（不需要 backdrop-filter，比玻璃材料省一层合成），
+ * 内容型面板用它；浮层类才用 material()。
+ */
+.panel {
+  @include pane;
+
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-md;
+  padding: 20px;
+  min-width: 0;
+}
+
+/* ---------- 搜索 ---------- */
+
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: $spacing-md;
+}
+
+.searchForm {
+  display: flex;
+  align-items: flex-end;
+  gap: $spacing-sm;
+  flex: 1 1 320px;
+  min-width: 0;
+
+  /* Input 自带 .form-group 外边距，这里靠 gap 统一控制间距。 */
+  :global(.form-group) {
+    margin: 0;
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+}
+
+/* 右侧动作区：结果计数 + 主动同步。计数用 flex:0 0 auto，不被长查询串撑开。 */
+.toolbarActions {
+  display: flex;
+  align-items: center;
+  gap: $spacing-sm;
+  flex: 0 0 auto;
+}
+
+.resultCount {
+  @include tabular-nums;
+
+  margin: 0;
+  flex: 0 0 auto;
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+/* 同步说明与同步结果共用一套小字排版：两者都是行内状态文字。 */
+.syncHint,
+.syncStatus {
+  margin: 0;
+  font-size: 11.5px;
+  line-height: 1.5;
+  color: var(--text-tertiary);
+}
+
+.syncStatus.syncFail {
+  color: var(--viz-failure);
+}
+
+/* ---------- 结果区域 ---------- */
+
+.results {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-sm;
+  min-width: 0;
+  transition: opacity 160ms var(--ease-out-strong, ease-out);
+}
+
+/* 切页期间保留旧行并降透明度，避免整块闪烁成骨架屏。 */
+.refreshing {
+  opacity: 0.55;
+  pointer-events: none;
+}
+
+.modelCell {
+  display: flex;
+  align-items: center;
+  gap: $spacing-sm;
+  min-width: 0;
+}
+
+.modelKey {
+  @include text-ellipsis;
+
+  font-family: $font-mono;
+  font-size: 12.5px;
+  color: var(--text-primary);
+}
+
+.overrideBadge {
+  flex: 0 0 auto;
+  padding: 1px 6px;
+  border-radius: $radius-full;
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: var(--primary-color);
+  background: color-mix(in srgb, var(--primary-color) 12%, transparent);
+}
+
+.rate {
+  @include tabular-nums;
+
+  font-family: $font-mono;
+  font-size: 12.5px;
+  color: var(--text-secondary);
+}
+
+.unitNote {
+  margin: 0;
+  font-size: 11.5px;
+  color: var(--text-tertiary);
+}
+
+/* ---------- 状态 ---------- */
+
+/* 加载态：真实表头 + 骨架行，形状与最终表格一致，而不是整块转圈。 */
+.loading {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-sm;
+  min-width: 0;
+}
+
+.skeletonModel {
+  width: min(220px, 55%);
+  height: 12px;
+}
+
+.skeletonRate {
+  width: 52px;
+  height: 12px;
+  margin-left: auto;
+}
+
+.loadingNote {
+  margin: 0;
+  font-size: 11.5px;
+  color: var(--text-tertiary);
+}
+
+.error {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: $spacing-sm;
+  padding: $spacing-md;
+  border-radius: var(--radius-md);
+  border: 1px solid color-mix(in srgb, var(--viz-failure) 35%, var(--hairline));
+  background: color-mix(in srgb, var(--viz-failure) 8%, transparent);
+}
+
+.errorText {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--text-primary);
+}
+
+/* ---------- 分页 ---------- */
+
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: $spacing-md;
+  padding-top: $spacing-sm;
+  border-top: 1px solid var(--hairline);
+}
+
+.pageInfo {
+  @include tabular-nums;
+
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+@include mobile {
+  .head {
+    flex-direction: column;
+    gap: $spacing-md;
+  }
+
+  .meta {
+    gap: $spacing-md;
+  }
+
+  .toolbar {
+    align-items: stretch;
+  }
+
+  .searchForm {
+    flex-basis: 100%;
+  }
+
+  /* 窄屏下动作区右对齐，按钮保持可点尺寸而不是被拉满。 */
+  .toolbarActions {
+    flex-wrap: wrap;
+    justify-content: flex-end;
+  }
+}

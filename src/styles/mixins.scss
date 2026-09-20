@@ -17,6 +17,12 @@
   }
 }
 
+@mixin wide {
+  @media (min-width: #{$breakpoint-wide}) {
+    @content;
+  }
+}
+
 // 文本截断
 @mixin text-ellipsis {
   overflow: hidden;
@@ -30,6 +36,62 @@
   -webkit-line-clamp: $lines;
   -webkit-box-orient: vertical;
   overflow: hidden;
+}
+
+// ——————————————————————————————————————————————
+// macOS 26 材料（Liquid Glass）
+// ——————————————————————————————————————————————
+
+/// 玻璃材料：所有"浮在内容之上"的面都用它，保证折射感一致。
+/// @param $bg 材料色（--material-glass / --material-glass-strong / --material-sidebar）
+@mixin material($bg: var(--material-glass), $radius: var(--radius-lg)) {
+  background: $bg;
+  border: 1px solid var(--glass-border);
+  border-radius: $radius;
+  backdrop-filter: var(--glass-backdrop-filter);
+  -webkit-backdrop-filter: var(--glass-backdrop-filter);
+  box-shadow: var(--panel-shadow);
+}
+
+/// 抬升面：不透明的窗格/卡片（不需要模糊，性能更好）。
+@mixin pane($radius: var(--radius-lg)) {
+  background: var(--bg-primary);
+  border: 1px solid var(--hairline);
+  border-radius: $radius;
+  box-shadow: var(--panel-shadow);
+}
+
+/// 发丝分隔线：用 box-shadow 而非 border，避免改变盒模型尺寸。
+@mixin hairline-bottom {
+  box-shadow: inset 0 -1px 0 var(--hairline);
+}
+
+@mixin hairline-top {
+  box-shadow: inset 0 1px 0 var(--hairline);
+}
+
+/// 键盘焦点环：只在键盘操作时出现，符合 macOS 的可访问性习惯。
+@mixin focus-ring($offset: 0px) {
+  outline: none;
+  box-shadow:
+    0 0 0 #{$offset} var(--bg-primary),
+    0 0 0 #{$offset + 3px} color-mix(in srgb, var(--primary-color) 45%, transparent);
+}
+
+/// 数字排版：统计值使用等宽数字，避免刷新时列宽跳动。
+@mixin tabular-nums {
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: 'tnum' 1;
+}
+
+/// 页面标题：SF Display 字重与紧凑字距
+@mixin page-title($size: 22px) {
+  font-family: $font-display;
+  font-size: $size;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+  color: var(--text-primary);
 }
 
 // 按钮重置

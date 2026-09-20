@@ -8,27 +8,28 @@ $lane-width: 210px;
 .timeline {
   display: flex;
   flex-direction: column;
-  gap: $spacing-md;
+  gap: 12px;
 }
 
 .head {
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
-  gap: $spacing-md;
+  gap: 12px;
   flex-wrap: wrap;
 }
 
 .title {
   margin: 0;
-  font-size: 18px;
-  font-weight: 650;
+  font-size: 16px;
+  font-weight: 620;
+  letter-spacing: -0.01em;
   color: var(--text-primary);
 }
 
 .range {
   margin: 2px 0 0;
-  font-size: 12px;
+  font-size: 11.5px;
   color: var(--text-quaternary);
   font-variant-numeric: tabular-nums;
 }
@@ -36,7 +37,7 @@ $lane-width: 210px;
 .controls {
   display: flex;
   align-items: center;
-  gap: $spacing-sm;
+  gap: 10px;
   flex-wrap: wrap;
 }
 
@@ -46,20 +47,24 @@ $lane-width: 210px;
   align-items: center;
   gap: 2px;
   padding: 3px;
-  background: var(--bg-tertiary);
-  border: 1px solid var(--border-color);
-  border-radius: 999px;
+  background: color-mix(in srgb, var(--text-primary) 6%, transparent);
+  border: 1px solid transparent;
+  border-radius: $radius-full;
 
   button {
     padding: 4px 12px;
     font: inherit;
-    font-size: 12.5px;
+    font-size: 12px;
+    font-weight: 540;
     color: var(--text-secondary);
     background: transparent;
     border: 1px solid transparent;
-    border-radius: 999px;
+    border-radius: $radius-full;
     cursor: pointer;
-    transition: all $transition-fast;
+    transition:
+      background-color $transition-fast,
+      color $transition-fast,
+      border-color $transition-fast;
 
     &:hover:not(:disabled) {
       color: var(--text-primary);
@@ -71,17 +76,20 @@ $lane-width: 210px;
     }
 
     &[aria-pressed='true'] {
-      background: var(--floating-surface, var(--bg-primary));
-      border-color: var(--border-hover);
+      background: var(--bg-primary);
+      border-color: transparent;
+      box-shadow: $shadow-sm;
       color: var(--text-primary);
+      font-weight: 620;
     }
   }
 }
 
 .chart {
-  border: 1px solid var(--border-color);
-  border-radius: $radius-lg;
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius-lg);
   background: var(--bg-primary);
+  box-shadow: $shadow-sm;
   overflow: hidden;
 }
 
@@ -89,7 +97,7 @@ $lane-width: 210px;
   min-height: 96px;
   display: grid;
   place-items: center;
-  padding: $spacing-lg;
+  padding: 20px;
   color: var(--text-quaternary);
   font-size: 12px;
   text-align: center;
@@ -102,7 +110,7 @@ $lane-width: 210px;
 }
 
 .axis {
-  border-bottom: 1px solid var(--border-color);
+  border-bottom: 1px solid var(--hairline);
 }
 
 .axisLabel {
@@ -128,15 +136,15 @@ $lane-width: 210px;
   align-items: center;
   gap: 1px;
   padding: 6px 2px;
-  border-left: 1px solid var(--border-color);
+  border-left: 1px solid var(--hairline);
 
   &[data-weekend='1'] {
-    background: rgba(255, 255, 255, 0.014);
+    background: color-mix(in srgb, var(--text-primary) 3%, transparent);
   }
 
   // The current day is the reference point for reading the whole chart.
   &[data-today='1'] {
-    background: rgba(255, 255, 255, 0.03);
+    background: color-mix(in srgb, var(--primary-color) 8%, transparent);
   }
 }
 
@@ -147,18 +155,18 @@ $lane-width: 210px;
 }
 
 .axisDate {
-  font-size: 11.5px;
-  font-weight: 600;
+  font-size: 11px;
+  font-weight: 580;
   color: var(--text-secondary);
   font-variant-numeric: tabular-nums;
   white-space: nowrap;
 }
 
 .lane {
-  border-top: 1px solid var(--border-color);
+  border-top: 1px solid var(--hairline);
 
   &:hover {
-    background: rgba(255, 255, 255, 0.012);
+    background: color-mix(in srgb, var(--text-primary) 2.5%, transparent);
   }
 }
 
@@ -187,7 +195,7 @@ $lane-width: 210px;
 
 .laneName {
   font-size: 12.5px;
-  font-weight: 600;
+  font-weight: 580;
   color: var(--text-primary);
   overflow: hidden;
   text-overflow: ellipsis;
@@ -197,9 +205,9 @@ $lane-width: 210px;
 .lanePeriod {
   flex: none;
   padding: 0 6px;
-  border-radius: 999px;
+  border-radius: $radius-full;
   font-size: 10px;
-  font-weight: 600;
+  font-weight: 580;
   color: var(--count-badge-text, var(--text-secondary));
   background: var(--count-badge-bg, var(--bg-tertiary));
 }
@@ -212,7 +220,7 @@ $lane-width: 210px;
 
 .laneLimit {
   padding: 1px 6px;
-  border-radius: $radius-sm;
+  border-radius: var(--radius-xs);
   font-size: 10.5px;
   color: var(--text-quaternary);
   background: var(--bg-tertiary);
@@ -237,10 +245,10 @@ $lane-width: 210px;
 
   > span {
     flex: 1 1 0;
-    border-left: 1px solid var(--border-color);
+    border-left: 1px solid var(--hairline);
 
     &[data-weekend='1'] {
-      background: rgba(255, 255, 255, 0.014);
+      background: color-mix(in srgb, var(--text-primary) 3%, transparent);
     }
   }
 }
@@ -252,23 +260,22 @@ $lane-width: 210px;
   top: 0;
   bottom: 0;
   width: 1px;
-  background: var(--text-tertiary, var(--text-quaternary));
+  background: var(--text-quaternary);
   opacity: 0.8;
   z-index: 1;
 }
 
 .window {
-  position: relative;
+  position: absolute;
   z-index: 2;
   height: 22px;
   display: flex;
   align-items: center;
   padding: 0 8px;
-  border-radius: 999px;
+  border-radius: $radius-full;
   overflow: hidden;
   font-size: 10.5px;
   white-space: nowrap;
-  position: absolute;
 }
 
 // Current window: solid, in the provider's colour — the row's focal point.
@@ -318,7 +325,7 @@ $lane-width: 210px;
   bottom: 6px;
   width: 2px;
   transform: translateX(-50%);
-  border-radius: 999px;
+  border-radius: $radius-full;
   background: var(--amber-color);
   box-shadow: 0 0 0 1px var(--bg-primary);
   cursor: help;
@@ -340,7 +347,7 @@ $lane-width: 210px;
   display: flex;
   align-items: center;
   flex-wrap: wrap;
-  gap: $spacing-md;
+  gap: 12px;
   font-size: 11px;
   color: var(--text-quaternary);
 }
@@ -354,26 +361,26 @@ $lane-width: 210px;
 .swatch {
   width: 22px;
   height: 10px;
-  border-radius: 999px;
+  border-radius: $radius-full;
 }
 
 .swatchLive {
-  background: color-mix(in srgb, var(--text-tertiary, #888) 34%, transparent);
-  border: 1px solid color-mix(in srgb, var(--text-tertiary, #888) 50%, transparent);
+  background: color-mix(in srgb, var(--text-tertiary) 34%, transparent);
+  border: 1px solid color-mix(in srgb, var(--text-tertiary) 50%, transparent);
 }
 
 .swatchNext {
-  border: 1px dashed color-mix(in srgb, var(--text-tertiary, #888) 45%, transparent);
+  border: 1px solid color-mix(in srgb, var(--text-tertiary) 45%, transparent);
 }
 
 .swatchPast {
-  background: color-mix(in srgb, var(--text-tertiary, #888) 12%, transparent);
+  background: color-mix(in srgb, var(--text-tertiary) 12%, transparent);
 }
 
 .swatchCredit {
   width: 2px;
   height: 14px;
-  border-radius: 999px;
+  border-radius: $radius-full;
   background: var(--amber-color);
 }
 

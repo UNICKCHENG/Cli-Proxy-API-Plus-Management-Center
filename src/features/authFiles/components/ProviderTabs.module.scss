@@ -7,7 +7,7 @@
   align-items: stretch;
   gap: 2px;
   overflow-x: auto;
-  border-bottom: 1px solid var(--border-color);
+  border-bottom: 1px solid var(--hairline);
   scrollbar-width: none;
 
   &::-webkit-scrollbar {
@@ -100,8 +100,8 @@
 
 .tabIconFallback {
   font-size: 10px;
-  font-weight: 700;
-  color: var(--text-secondary);
+  font-weight: 620;
+  color: var(--text-tertiary);
 }
 
 .tabLabel {

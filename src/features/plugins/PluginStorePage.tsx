@@ -21,6 +21,7 @@ import { useHeaderRefresh } from '@/hooks/useHeaderRefresh';
 import { pluginStoreApi } from '@/services/api';
 import { useAuthStore, useConfigStore, useNotificationStore } from '@/stores';
 import { getErrorMessage, isRecord } from '@/utils/helpers';
+import { createRafCoalescedCallback } from '@/utils/raf';
 import type { PluginStoreEntry, PluginStoreResponse } from '@/types';
 import {
   buildRepositoryURL,
@@ -637,13 +638,13 @@ export function PluginStorePage() {
   }, [measureDescriptionOverflow, visiblePlugins]);
 
   useEffect(() => {
-    const handleResize = () => {
-      window.requestAnimationFrame(measureDescriptionOverflow);
-    };
-
-    window.addEventListener('resize', handleResize);
+    // measureDescriptionOverflow 会对每张卡片调用 getComputedStyle + 读取 scrollHeight，
+    // 属于强制样式重算；resize 期间若不合并，一张卡片可能在一帧内被重复测量多次。
+    const coalesced = createRafCoalescedCallback(measureDescriptionOverflow);
+    window.addEventListener('resize', coalesced.schedule);
     return () => {
-      window.removeEventListener('resize', handleResize);
+      window.removeEventListener('resize', coalesced.schedule);
+      coalesced.cancel();
     };
   }, [measureDescriptionOverflow]);
 
