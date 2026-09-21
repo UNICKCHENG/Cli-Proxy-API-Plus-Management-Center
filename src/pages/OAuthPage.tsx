@@ -41,6 +41,9 @@ interface ProviderState {
   callbackSubmitting?: boolean;
   callbackStatus?: 'success' | 'error';
   callbackError?: string;
+  cursorApiKey?: string;
+  cursorImporting?: boolean;
+  cursorResult?: { name: string; label: string };
 }
 
 interface VertexImportResult {
@@ -81,48 +84,14 @@ function getErrorStatus(error: unknown): number | undefined {
 }
 
 const PROVIDERS: BuiltInOAuthProviderCard[] = [
-  {
-    kind: 'builtin',
-    id: 'meta',
-    titleKey: 'auth_login.meta_oauth_title',
-    icon: iconMeta,
-  },
-  {
-    kind: 'builtin',
-    id: 'kimi',
-    titleKey: 'auth_login.kimi_oauth_title',
-    icon: { light: iconKimiDark, dark: iconKimiLight },
-  },
-  {
-    kind: 'builtin',
-    id: 'codex',
-    titleKey: 'auth_login.codex_oauth_title',
-    icon: iconCodex,
-  },
-  {
-    kind: 'builtin',
-    id: 'anthropic',
-    titleKey: 'auth_login.anthropic_oauth_title',
-    icon: iconClaude,
-  },
-  {
-    kind: 'builtin',
-    id: 'antigravity',
-    titleKey: 'auth_login.antigravity_oauth_title',
-    icon: iconAntigravity,
-  },
-  {
-    kind: 'builtin',
-    id: 'xai',
-    titleKey: 'auth_login.xai_oauth_title',
-    icon: { light: iconGrok, dark: iconGrokDark },
-  },
-  {
-    kind: 'builtin',
-    id: 'devin',
-    titleKey: 'auth_login.devin_oauth_title',
-    icon: { light: iconDevin, dark: iconDevinDark },
-  },
+  { kind: 'builtin', id: 'meta', titleKey: 'auth_login.meta_oauth_title', icon: iconMeta },
+  { kind: 'builtin', id: 'kimi', titleKey: 'auth_login.kimi_oauth_title', icon: { light: iconKimiDark, dark: iconKimiLight } },
+  { kind: 'builtin', id: 'codex', titleKey: 'auth_login.codex_oauth_title', icon: iconCodex },
+  { kind: 'builtin', id: 'anthropic', titleKey: 'auth_login.anthropic_oauth_title', icon: iconClaude },
+  { kind: 'builtin', id: 'antigravity', titleKey: 'auth_login.antigravity_oauth_title', icon: iconAntigravity },
+  { kind: 'builtin', id: 'xai', titleKey: 'auth_login.xai_oauth_title', icon: { light: iconGrok, dark: iconGrokDark } },
+  { kind: 'builtin', id: 'devin', titleKey: 'auth_login.devin_oauth_title', icon: { light: iconDevin, dark: iconDevinDark } },
+  { kind: 'builtin', id: 'cursor', titleKey: 'auth_login.cursor_oauth_title', icon: '' },
 ];
 
 const BUILTIN_PROVIDER_IDS = new Set<string>(PROVIDERS.map((provider) => provider.id));
@@ -158,6 +127,13 @@ function OAuthProviderIcon({
   provider: OAuthProviderCard;
   theme: 'light' | 'dark';
 }) {
+  if (provider.id === 'cursor') {
+    return (
+      <span className={styles.cardTitleIconFallback} aria-hidden="true">
+        <IconPlug size={18} />
+      </span>
+    );
+  }
   if (provider.kind === 'plugin') {
     return <PluginOAuthIcon src={provider.icon} />;
   }
@@ -302,6 +278,14 @@ export function OAuthPage() {
     };
   }, [clearTimers]);
 
+  const cursorImportControllerRef = useRef<AbortController | null>(null);
+
+  useEffect(() => {
+    return () => {
+      cursorImportControllerRef.current?.abort();
+      cursorImportControllerRef.current = null;
+    };
+  }, []);
   useEffect(() => {
     let cancelled = false;
 
@@ -666,6 +650,48 @@ export function OAuthPage() {
     ]
       .filter(Boolean)
       .join(' ');
+  const importCursorApiKey = async () => {
+    const apiKey = (states.cursor?.cursorApiKey || '').trim();
+    if (!apiKey) {
+      const message = t('auth_login.cursor_error');
+      updateProviderState('cursor', { status: 'error', error: message });
+      showNotification(message, 'warning');
+      return;
+    }
+    cursorImportControllerRef.current?.abort();
+    const controller = new AbortController();
+    cursorImportControllerRef.current = controller;
+    updateProviderState('cursor', {
+      cursorImporting: true,
+      status: 'waiting',
+      error: undefined,
+      cursorResult: undefined,
+    });
+    try {
+      const result = await oauthApi.importCursorApiKey(apiKey, controller.signal);
+      if (controller.signal.aborted) return;
+      notifyAuthFilesChanged();
+      updateProviderState('cursor', {
+        cursorImporting: false,
+        status: 'success',
+        cursorApiKey: '',
+        cursorResult: { name: result.name, label: result.label },
+      });
+      showNotification(
+        t('auth_login.cursor_success', { label: result.label || result.name }),
+        'success'
+      );
+    } catch (err: unknown) {
+      if (controller.signal.aborted) return;
+      const message = getErrorMessage(err) || t('auth_login.cursor_error');
+      updateProviderState('cursor', { cursorImporting: false, status: 'error', error: message });
+      showNotification(message, 'error');
+    } finally {
+      if (cursorImportControllerRef.current === controller) {
+        cursorImportControllerRef.current = null;
+      }
+    }
+  };
 
     return (
       <Card
@@ -679,11 +705,11 @@ export function OAuthPage() {
         }
         extra={
           <Button
-            onClick={() => startAuth(provider.id)}
-            loading={state.polling}
+            onClick={() => (provider.id === 'cursor' ? void importCursorApiKey() : startAuth(provider.id))}
+            loading={provider.id === 'cursor' ? state.cursorImporting : state.polling}
             disabled={provider.id === 'devin' && Boolean(state.state)}
           >
-            {loginButtonLabel}
+            {provider.id === 'cursor' ? t('auth_login.cursor_import_button') : loginButtonLabel}
           </Button>
         }
       >
@@ -739,6 +765,24 @@ export function OAuthPage() {
                 </div>
               )}
             </div>
+          )}
+          {provider.id === 'cursor' && (
+            <Input
+              type="password"
+              autoComplete="off"
+              label={t('auth_login.cursor_input_label')}
+              hint={t('auth_login.cursor_input_hint')}
+              placeholder={t('auth_login.cursor_input_placeholder')}
+              value={state.cursorApiKey || ''}
+              disabled={state.cursorImporting}
+              onChange={(event) =>
+                updateProviderState('cursor', {
+                  cursorApiKey: event.target.value,
+                  status: state.status === 'error' ? undefined : state.status,
+                  error: undefined,
+                })
+              }
+            />
           )}
           {canSubmitCallback && (
             <div className={styles.callbackSection}>

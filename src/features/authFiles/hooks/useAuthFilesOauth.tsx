@@ -86,6 +86,46 @@ export function useAuthFilesOauth(options: UseAuthFilesOauthOptions): UseAuthFil
     return Array.from(providers);
   }, [files, modelAlias]);
 
+  // The cursor catalog is fetched per auth file, so the model effect must only re-run when the
+  // set of relevant files actually changes -- not on every `files` array identity change from
+  // polling or unrelated mutations. The signature is a stable string that only changes when a
+  // provider gains or loses auth files; providerAuthFiles re-derives (and keeps a stable
+  // reference) from that signature, and both feed the model effect below.
+  const providerFileSignature = useMemo(() => {
+    const byProvider = new Map<string, string[]>();
+    files.forEach((file) => {
+      const key = normalizeProviderKey(String(file.type ?? file.provider ?? ''));
+      if (!key) return;
+      const name = file.name.trim();
+      if (!name) return;
+      const list = byProvider.get(key) ?? [];
+      list.push(name);
+      byProvider.set(key, list);
+    });
+    return Array.from(byProvider.entries())
+      .map(([provider, names]) => `${provider}:${Array.from(new Set(names)).sort().join(',')}`)
+      .sort()
+      .join('|');
+  }, [files]);
+
+  // Same content => same signature => same reference, so the model effect treats this as
+  // stable until a real credential change.
+  const providerAuthFiles = useMemo(() => {
+    const byProvider = new Map<string, readonly string[]>();
+    if (providerFileSignature) {
+      providerFileSignature.split('|').forEach((entry) => {
+        const separator = entry.indexOf(':');
+        if (separator <= 0) return;
+        const names = entry
+          .slice(separator + 1)
+          .split(',')
+          .filter(Boolean);
+        byProvider.set(entry.slice(0, separator), names);
+      });
+    }
+    return byProvider;
+  }, [providerFileSignature]);
+
   useEffect(() => {
     if (viewMode !== 'diagram') return;
 
@@ -100,6 +140,17 @@ export function useAuthFilesOauth(options: UseAuthFilesOauthOptions): UseAuthFil
       const results = await Promise.all(
         providerList.map(async (provider) => {
           try {
+            if (provider === 'cursor') {
+              const cursorNames = providerAuthFiles.get('cursor') ?? [];
+              const perAuthModels = await Promise.all(
+                cursorNames.map((name) => authFilesApi.getModelsForAuthFile(name))
+              );
+              const byId = new Map<string, AuthFileModelItem>();
+              perAuthModels.flat().forEach((model) => {
+                if (model.id && !byId.has(model.id)) byId.set(model.id, model);
+              });
+              return { provider, models: Array.from(byId.values()) };
+            }
             const models = await authFilesApi.getModelDefinitions(provider);
             return { provider, models };
           } catch {
@@ -125,7 +176,7 @@ export function useAuthFilesOauth(options: UseAuthFilesOauthOptions): UseAuthFil
     return () => {
       cancelled = true;
     };
-  }, [providerList, viewMode]);
+  }, [providerAuthFiles, providerList, viewMode]);
 
   const loadExcluded = useCallback(async () => {
     const requestId = ++excludedLoadRequestRef.current;

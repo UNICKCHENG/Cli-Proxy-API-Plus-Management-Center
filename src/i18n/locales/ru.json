@@ -765,6 +765,17 @@
     "upgrade_required_desc": "Текущая версия сервера не поддерживает API псевдонимов моделей OAuth. Обновите CLI Proxy API (CPA) до последней версии."
   },
   "auth_login": {
+    "cursor_oauth_title": "API-ключ Cursor",
+    "cursor_oauth_hint": "Импортируйте API-ключ Cursor, чтобы сохранить встроенный файл авторизации Cursor. Ключ отправляется только в Management API для проверки.",
+    "cursor_input_label": "API-ключ Cursor",
+    "cursor_input_hint": "Вставьте ключ, начинающийся с key_.",
+    "cursor_input_placeholder": "key_...",
+    "cursor_import_button": "Импортировать ключ Cursor",
+    "cursor_success": "Авторизация Cursor сохранена: {{label}}",
+    "cursor_error": "Не удалось импортировать API-ключ Cursor.",
+    "cursor_oauth_status_success": "Авторизация Cursor выполнена успешно!",
+    "cursor_oauth_status_waiting": "Проверка ключа Cursor…",
+    "cursor_oauth_status_error": "Ошибка авторизации Cursor:",
     "devin_oauth_cancel": "Отменить вход в Devin",
     "devin_oauth_cancelled": "Вход в Devin отменён.",
     "devin_oauth_cancel_error": "Не удалось отменить вход в Devin:",

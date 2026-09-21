@@ -9,7 +9,27 @@ import {
 } from '@/utils/providerKeys';
 
 export type BuiltInOAuthProvider =
-  'codex' | 'anthropic' | 'antigravity' | 'kimi' | 'xai' | 'devin' | 'meta';
+  | 'codex'
+  | 'anthropic'
+  | 'antigravity'
+  | 'kimi'
+  | 'xai'
+  | 'devin'
+  | 'meta'
+  | 'cursor';
+
+export interface CursorImportResponse {
+  status: 'ok';
+  name: string;
+  label: string;
+}
+
+const normalizeCursorImportResponse = (payload: CursorImportResponse): CursorImportResponse => ({
+  status: 'ok',
+  name: typeof payload?.name === 'string' ? payload.name.trim() : '',
+  label: typeof payload?.label === 'string' ? payload.label.trim() : '',
+});
+
 
 export interface OAuthStartResponse {
   url: string;
@@ -49,6 +69,14 @@ export const oauthApi = {
       params: Object.keys(params).length ? params : undefined,
       ...(signal ? { signal } : {}),
     });
+  },
+  importCursorApiKey: async (apiKey: string, signal?: AbortSignal): Promise<CursorImportResponse> => {
+    const response = await apiClient.post<CursorImportResponse>(
+      '/cursor-auth',
+      { api_key: apiKey },
+      signal ? { signal } : undefined
+    );
+    return normalizeCursorImportResponse(response);
   },
 
   getAuthStatus: (state: string, signal?: AbortSignal) =>
