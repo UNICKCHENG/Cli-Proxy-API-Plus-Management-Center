@@ -27,6 +27,8 @@ import iconGrok from '@/assets/icons/grok.svg';
 import iconGrokDark from '@/assets/icons/grok-dark.svg';
 import iconDevin from '@/assets/icons/devin.svg';
 import iconDevinDark from '@/assets/icons/devin-dark.svg';
+import iconCursorDark from '@/assets/icons/cursor-dark.svg';
+import iconCursorLight from '@/assets/icons/cursor-light.svg';
 
 interface ProviderState {
   url?: string;
@@ -91,7 +93,7 @@ const PROVIDERS: BuiltInOAuthProviderCard[] = [
   { kind: 'builtin', id: 'antigravity', titleKey: 'auth_login.antigravity_oauth_title', icon: iconAntigravity },
   { kind: 'builtin', id: 'xai', titleKey: 'auth_login.xai_oauth_title', icon: { light: iconGrok, dark: iconGrokDark } },
   { kind: 'builtin', id: 'devin', titleKey: 'auth_login.devin_oauth_title', icon: { light: iconDevin, dark: iconDevinDark } },
-  { kind: 'builtin', id: 'cursor', titleKey: 'auth_login.cursor_oauth_title', icon: '' },
+  { kind: 'builtin', id: 'cursor', titleKey: 'auth_login.cursor_oauth_title', icon: { light: iconCursorLight, dark: iconCursorDark } },
 ];
 
 const BUILTIN_PROVIDER_IDS = new Set<string>(PROVIDERS.map((provider) => provider.id));
@@ -127,13 +129,6 @@ function OAuthProviderIcon({
   provider: OAuthProviderCard;
   theme: 'light' | 'dark';
 }) {
-  if (provider.id === 'cursor') {
-    return (
-      <span className={styles.cardTitleIconFallback} aria-hidden="true">
-        <IconPlug size={18} />
-      </span>
-    );
-  }
   if (provider.kind === 'plugin') {
     return <PluginOAuthIcon src={provider.icon} />;
   }
