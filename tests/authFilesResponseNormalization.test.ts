@@ -105,4 +105,18 @@ describe('auth-files response normalization', () => {
     expect(result.files[0]?.account).toBe('sk-live-abcd');
     expect(result.files[0]?.accountType).toBeUndefined();
   });
+
+  test('filters internal state artifacts and state-subdir paths from the file list', () => {
+    const result = normalizeAuthFilesResponse(
+      responseWithRawFiles([
+        { name: 'codex-a.json', type: 'codex' },
+        { name: 'usage-stats.json' },
+        { name: 'model-prices.json' },
+        { name: 'state/usage-stats.json' },
+        { name: 'state\\model-prices.json' },
+      ])
+    );
+
+    expect(result.files.map((file) => file.name)).toEqual(['codex-a.json']);
+  });
 });

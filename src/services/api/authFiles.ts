@@ -280,15 +280,32 @@ const normalizeAuthFileEntry = (
   };
 };
 
+// 内部状态产物文件名：usage-stats / model-prices 等持久化在 auth 目录
+// state 子目录下的运行时文件，不是凭证。
+const INTERNAL_STATE_ARTIFACT_NAMES = new Set(['usage-stats.json', 'model-prices.json']);
+
+const isInternalStateArtifact = (entry: AuthFileEntry): boolean => {
+  const name = readTextField(entry, 'name');
+  if (!name) return false;
+  if (INTERNAL_STATE_ARTIFACT_NAMES.has(name.toLowerCase())) return true;
+  // state 子目录下的条目以相对路径形式出现（如 "state/xxx.json"）；
+  // 任何带路径分隔符的条目都不是认证文件根目录下的凭证。
+  return name.includes('/') || name.includes('\\');
+};
+
 export const normalizeAuthFilesResponse = (
   payload: AuthFilesResponse,
   receivedAtMs = Date.now()
 ): AuthFilesResponse => {
   const observedAt = normalizeCooldownTimestamp(payload?.observed_at);
   const files = Array.isArray(payload?.files) ? payload.files : [];
+  // 后端 filestore 已跳过 auth 目录下的 state 子目录；此处兜底过滤旧版本
+  // 后端或异常数据中混入的内部状态产物（usage-stats.json / model-prices.json
+  // 及任何带路径分隔符的条目），避免它们出现在认证文件列表里。
+  const visibleFiles = files.filter((entry) => !isInternalStateArtifact(entry));
   const grouped = new Map<string, AuthFileEntry[]>();
 
-  files.forEach((entry) => {
+  visibleFiles.forEach((entry) => {
     const name = readTextField(entry, 'name');
     const key = name
       ? getQuotaCacheKey({
