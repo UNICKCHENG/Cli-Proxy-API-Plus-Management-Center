@@ -136,12 +136,13 @@ const costRowLabel = (
 };
 
 /**
- * Top cost rows for one dimension.
- *
- * Rows with no resolved price are dropped rather than charted at zero: a
- * zero-length bar reads as "free", when the truth is "unknown". The caller
- * surfaces the unpriced count separately.
+ * Cost by model/provider is a ranking, but unpriced requests still carry valid
+ * token and request counts. Keep them visible so providers without a public
+ * price (for example Cursor router models) are not mistaken for missing data.
  */
+const hasUsage = (entry: UsageStatsEntry): boolean => entry.requests > 0;
+
+/** Top usage rows for one dimension, retaining rows whose price is unknown. */
 export const buildCostRows = (
   report: UsageStatsReport | null,
   dimension: 'models' | 'providers',
@@ -150,7 +151,7 @@ export const buildCostRows = (
 ): CostRow[] => {
   if (!report) return [];
   const entries = dimension === 'models' ? report.models : report.providers;
-  const rows = entries.filter((entry) => entry.cost > 0).slice(0, limit);
+  const rows = entries.filter(hasUsage).slice(0, limit);
   const peak = rows.reduce((max, entry) => Math.max(max, entry.cost), 0);
   return rows.map((entry) => ({
     id: entry.id,

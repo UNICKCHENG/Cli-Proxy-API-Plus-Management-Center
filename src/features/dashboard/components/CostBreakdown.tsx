@@ -54,7 +54,7 @@ export function CostBreakdown({ title, rows, currency, emptyLabel }: CostBreakdo
               />
             </span>
             <span className={styles.value}>
-              {formatCost(row.cost, currency)}
+              {row.cost > 0 ? formatCost(row.cost, currency) : t('dashboard.usage_unpriced')}
               <span className={styles.requests}>
                 {t('dashboard.usage_breakdown_requests', { value: row.requests.toLocaleString() })}
               </span>

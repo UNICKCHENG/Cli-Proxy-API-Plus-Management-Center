@@ -279,19 +279,21 @@ describe('buildCostRows', () => {
     expect(buildCostRows(null, 'models', 'Unknown')).toEqual([]);
   });
 
-  test('drops unpriced rows rather than charting them at zero', () => {
+  test('keeps unpriced rows so token requests remain visible', () => {
     const rows = buildCostRows(
       makeReport({
         models: [
-          { id: 'free', label: 'Free', cost: 0, requests: 4 },
           { id: 'paid', label: 'Paid', cost: 2, requests: 1 },
+          { id: 'cursor-auto', label: 'Cursor Auto', cost: 0, requests: 4, unpriced: 4 },
         ],
       }),
       'models',
       'Unknown'
     );
 
-    expect(rows.map((row) => row.id)).toEqual(['paid']);
+    expect(rows.map((row) => row.id)).toEqual(['paid', 'cursor-auto']);
+    expect(rows[1].requests).toBe(4);
+    expect(rows[1].unpriced).toBe(4);
   });
 
   test('scales share against the peak row and keeps the alias as sublabel', () => {
